@@ -408,6 +408,7 @@ class output  {
 	private $st_time;
 	public $echo;
 	public  $vendor;
+	public $path;
 	
 //Имя лог-файла, куда ведем запись
 //  private $logfile;
@@ -421,7 +422,7 @@ class output  {
 	public function __construct($vendor){
 		$this->st_time = $this->TimeMeasure();
 	   $this->vendor=$vendor;
-	unlink($this->vendor .'_al.log');
+	unlink($path.$this->vendor .'_al.log');
 			
 	}
 	function __destruct() {
