@@ -20,7 +20,7 @@ define( '_TRY', 3); //количество попыток закачки
 $o = new output('sima-img-kach');
 $o->echo = false;
 $pars->proxy = '67.205.68.11:8080';
-
+$o->path = dirname ( __FILE__ ) . DS.'log';
 
 // -------------- начинаем обработку-----------------------
 
