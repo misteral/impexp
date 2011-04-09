@@ -408,7 +408,7 @@ class output  {
 	private $st_time;
 	public $echo;
 	public  $vendor;
-	public $path; //путь логов
+	public $path;
 	
 //Имя лог-файла, куда ведем запись
 //  private $logfile;
@@ -422,7 +422,7 @@ class output  {
 	public function __construct($vendor){
 		$this->st_time = $this->TimeMeasure();
 	   $this->vendor=$vendor;
-	unlink($this->$path.$this->vendor .'_al.log');
+	unlink($path.$this->vendor .'_al.log');
 			
 	}
 	function __destruct() {
@@ -439,7 +439,7 @@ class output  {
         $line .= $txt."\r\n";;
         
 		if ($this->echo){echo ($txt);	}
-         file_put_contents( $this->path.$this->vendor .'_al.log', $line, FILE_APPEND );
+         file_put_contents( $this->vendor .'_al.log', $line, FILE_APPEND );
 		
 	}
 /*	/**
@@ -504,6 +504,18 @@ class output  {
 } //output
 
 
+class my_error extends Exception {
+		protected $message = 'Unknown exception';     // Exception message
+		protected $code    = 0;                       // User-defined exception code
+	public function __construct($message = null, $code = 0)
+    {
+        if (!$message) {
+            throw new $this('Unknown myerror '. get_class($this));
+        }
+        parent::__construct($message, $code);
+    }
+		
+}//my_error
 
 
 

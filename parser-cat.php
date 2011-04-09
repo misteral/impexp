@@ -21,7 +21,6 @@ define ( 'TARGET', 'http://sima-land.ru' );
 define ('CATALOG','/catalog.html');
 define ( 'VENDOR','1' ); //вендор сима
 
-$out->path = dirname ( __FILE__ ) . DS.'log';
 
 $count = 0;
 
