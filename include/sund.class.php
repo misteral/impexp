@@ -408,7 +408,7 @@ class output  {
 	private $st_time;
 	public $echo;
 	public  $vendor;
-	public $path = 'log/';
+	private $path_log;
 	
 //Имя лог-файла, куда ведем запись
 //  private $logfile;
@@ -420,9 +420,11 @@ class output  {
 //  public $current_data=array();
 	
 	public function __construct($vendor){
+		$this->path_log = dirname(dirname( __FILE__ )).DIRECTORY_SEPARATOR.'log'.DIRECTORY_SEPARATOR;
+		
 		$this->st_time = $this->TimeMeasure();
-	   $this->vendor=$vendor;
-	unlink($this->$path.$this->vendor .'_al.log');
+	   	$this->vendor=$vendor;
+		unlink('../'.$this->path_log.$this->vendor .'_al.log');
 			
 	}
 	function __destruct() {
@@ -439,7 +441,7 @@ class output  {
         $line .= $txt."\r\n";;
         
 		if ($this->echo){echo ($txt);	}
-         file_put_contents($this->path.$this->vendor .'_al.log', $line, FILE_APPEND );
+         file_put_contents($this->path_log.$this->vendor .'_al.log', $line, FILE_APPEND );
 		
 	}
 /*	/**
