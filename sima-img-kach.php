@@ -40,7 +40,7 @@ if ($value->product_status==2){//не обрабатываем если не с�
 		if ($row['product_status'] <> 4 and $row['product_status']<>3){
 		$file = IMAGE_BASE.DS.$row['product_sku'].'.jpg';
 		$url = TARGET.'/images/photo/big/'.$row['product_sku'].'.jpg';
-		while (!$res or $p >_TRY){
+		while ($res <> 'ok' or $p >_TRY){
 			if (file_exists($file) and filesize($file)){$res = 'ok'; //файл существует
 			}else {$res = $pars->get_img_to_file($url,$file);}
 			
