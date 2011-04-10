@@ -42,7 +42,10 @@ if ($value->product_status==2){//не обрабатываем если не с�
 		$url = TARGET.'/images/photo/big/'.$row['product_sku'].'.jpg';
 		while ($res <> 'ok' or $p >_TRY){
 			if (file_exists($file) and filesize($file)){$res = 'ok'; //файл существует
-			}else {$res = $pars->get_img_to_file($url,$file);}
+			}else {
+				$res = $pars->get_img_to_file($url,$file);
+				++$p;
+			}
 			
 			
 			if(!res=='ok'){sleep(1);}

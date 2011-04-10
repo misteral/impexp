@@ -376,7 +376,6 @@ class parse {
 	curl_setopt($ch, CURLOPT_URL, $target_url);
 	curl_setopt($ch, CURLOPT_FAILONERROR, true);
 	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-	curl_setopt($ch, CURLOPT_REFERER, '');
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_TIMEOUT, 60);
 	curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -509,18 +508,7 @@ class output  {
 } //output
 
 
-class my_error extends Exception {
-		protected $message = 'Unknown exception';     // Exception message
-		protected $code    = 0;                       // User-defined exception code
-	public function __construct($message = null, $code = 0)
-    {
-        if (!$message) {
-            throw new $this('Unknown myerror '. get_class($this));
-        }
-        parent::__construct($message, $code);
-    }
-		
-}//my_error
+
 
 
 
