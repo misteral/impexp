@@ -306,6 +306,7 @@ class parse {
 	public $sleep=5;
 	public $proxy;
 	public $try = 3;
+	public $count = 0;
 	/**
 	 * Скачивает и схраняет файл и перекодирует из 1251 в utf ...
 	 * @param unknown_type $target_url
@@ -407,30 +408,33 @@ class parse {
 	 */
 	function get_url_to_file($target_url,$target_file_name,$try){
 		$this->try = $try;
+		if (file_exists($target_file_name)){$creation_date = date ("d.m.y", filemtime($target_file_name));}//else{$creation_date = 0;}
+		$today = date("d.m.y"); 
 		while (!$res or $p > $this->try){
-		
-		$userAgent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.0.8) Gecko/2009032609 Firefox/3.0.8';
-		$referer = 'z-ecx.image-amazon.com';
-		//$o = new output('Ошибки curl');
-		$fp = fopen($target_file_name, 'wb');
-		if (!$ch = curl_init()){
-			//$o->add('Не инициализирован CURL');
-			return 'error :Не инициализирован CURL';}
-		curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
-		curl_setopt($ch, CURLOPT_URL, $target_url);
-		curl_setopt($ch, CURLOPT_FAILONERROR, true);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_REFERER, $referer);
-	    if($this->proxy) {
-	            //curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL,TRUE);
-	            //curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
-	            curl_setopt($ch, CURLOPT_PROXY, trim($this->proxy)); 
-	        } 	
-	    curl_setopt($ch, CURLOPT_FILE, $fp);
-		$res =curl_exec($ch); 
+			if (file_exists($target_file_name) and filesize($target_file_name) and $today==$creation_date ){
+				$res = 'ok';
+			}else{
+				$userAgent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.0.8) Gecko/2009032609 Firefox/3.0.8';
+				$referer = 'z-ecx.image-amazon.com';
+				//$o = new output('Ошибки curl');
+				$fp = fopen($target_file_name, 'wb');
+				if (!$ch = curl_init()){return 'error :Не инициализирован CURL';}
+				curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
+				curl_setopt($ch, CURLOPT_URL, $target_url);
+				curl_setopt($ch, CURLOPT_FAILONERROR, true);
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+				curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+				curl_setopt($ch, CURLOPT_HEADER, 0);
+				curl_setopt($ch, CURLOPT_REFERER, $referer);
+			    if($this->proxy) {  curl_setopt($ch, CURLOPT_PROXY, trim($this->proxy)); }
+			    //curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL,TRUE);
+			    //curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
+			    curl_setopt($ch, CURLOPT_FILE, $fp);
+				$res =curl_exec($ch);
+				if (!$res){sleep($this->sleep);++$p;} //не скачался пауза в слееп
+				else {++$this->count;}
+			} //else есть файл 
 		} //while 
 		if (!$res){
 			return 'error'.curl_error($ch);
