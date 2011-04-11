@@ -625,10 +625,10 @@ fg=red</panel_attributes>
       <x>742</x>
       <y>1008</y>
       <w>280</w>
-      <h>210</h>
+      <h>154</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>42;182;252;126;252;42</additional_attributes>
+    <additional_attributes>42;126;252;126;252;42</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
