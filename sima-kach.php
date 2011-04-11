@@ -63,7 +63,7 @@ $db->change_status('игрушка', 3, VENDOR);
 
 /*$rows = $db->child_gr();
 foreach ($rows as $value){
-	if (!$value->product_status){//не качаем если статус не NULL
+	if (!$value->product_status){//не качаем если статус не NULL или не 0 
 	$dop = 1; // добавочный к файлу количество страниц 
 	$id = $value->product_id;
 	$url = $value->product_url;
