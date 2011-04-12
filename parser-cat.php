@@ -33,7 +33,7 @@ if (!$value->product_status<>1){//не обрабатываем если не с
 	$document = file_get_html(CPATH_BASE.DS.$id.'_'.$dop.'.html');
 	$e=$document->find('table[class=item-list] tr[id=item-list-tr]'); //нашли нужную таблицу
 	$out->add('Начинаем обработку категории '.$value->product_name.'. Файл='.$id.'_'.$dop.'.html');
-	if ($document->innertext!=='' and sizeof($e)) {$out->add('Количество элементов для обработки='.sizeof($e));}
+	if ($document->innertext!=='' and !sizeof($e)) {$out->add('Количество элементов для обработки='.sizeof($e));}
 		else {$out->add('!!!!!!!!!!!!!!!!!!!!!!!!!!!!НЕТ ЭЛЕМЕНТОВ ДЛЯ ОБРАБОТКИ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');}
 		foreach ($e as $el1) { 
 		$item = new item_VM();

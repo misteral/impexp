@@ -117,6 +117,22 @@ class ex_Mysql {
         return $last;	
 	}
 	function del($it){}
+
+	
+	function isnew($product_name, $product_sku, $product_parent_id) {
+		$q = "select COUNT(*) as cn from jos_al_import where
+			product_name ='".$product_name."' 
+			and product_sku = '".$product_sku."' 
+			and product_parent_id = '".$product_parent_id."' 
+			";
+		$res = $this->query($q);
+		$last = @mysql_fetch_array($res);
+        $last = $last['cn'];
+        if (!$last){$last = true;
+        }else {$last = false;}
+        return $last;	
+	}
+	
 	function clear($product_vendor = 0){
 		if($product_vendor_id){
 			$q= 'delete from jos_al_import where product_vendor ='.$product_vendor.';';
@@ -332,15 +348,16 @@ class parse {
 	    if($this->proxy) {curl_setopt($ch, CURLOPT_PROXY, trim($this->proxy));} 
             //curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL,TRUE);
             //curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
-		$res= curl_exec($ch);
+		$res = curl_exec($ch);
 		if (!$res){sleep($this->sleep);++$p;} //не скачался пауза в слееп
 		else {++$this->count;}
 	} //while 
 	if (!$res){return 'error '.curl_error($ch);}
-	$html= mb_convert_encoding($res,'UTF8', "CP1251");
+	!$res= mb_convert_encoding($res,'UTF8', "CP1251");
 	$res = $this->save($target_file, $res);
 	curl_close($ch);
-	return $res;
+	return 'ok';
+	
 	}//get_1251_to_UTF
 	
 	
