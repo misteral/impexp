@@ -307,6 +307,8 @@ class parse {
 	public $proxy;
 	public $try = 3;
 	public $count = 0;
+	
+	
 	/**
 	 * Скачивает и схраняет файл и перекодирует из 1251 в utf ...
 	 * @param unknown_type $target_url
@@ -314,35 +316,41 @@ class parse {
 	 * @return Ambigous <number, number>
 	 */
 	function get_1251_to_UTF($target_url,$target_file){
-	$userAgent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.0.8) Gecko/2009032609 Firefox/3.0.8';
-	// make the cURL request to $target_url
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
-	curl_setopt($ch, CURLOPT_URL, $target_url);
-	curl_setopt($ch, CURLOPT_FAILONERROR, true);
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-	curl_setopt($ch, CURLOPT_REFERER, '');
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 60);
 	
-    if($this->proxy) {
+	$p=0;
+	while (!$res and $p < $this->try){
+		$userAgent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.0.8) Gecko/2009032609 Firefox/3.0.8';
+		// make the cURL request to $target_url
+	    if (!$ch = curl_init()){return 'error :Не инициализирован CURL';}
+		curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
+		curl_setopt($ch, CURLOPT_URL, $target_url);
+		curl_setopt($ch, CURLOPT_FAILONERROR, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_REFERER, '');
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+	    if($this->proxy) {curl_setopt($ch, CURLOPT_PROXY, trim($this->proxy));} 
             //curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL,TRUE);
             //curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
-            curl_setopt($ch, CURLOPT_PROXY, trim($this->proxy)); 
-        } 
-	
-	
-	$html= curl_exec($ch);
-	if (!$html) {
-		echo "<br />cURL error number:" .curl_errno($ch);
-		echo "<br />cURL error:" . curl_error($ch);
-		return $res = 0;
-	}
-	$html= mb_convert_encoding($html,'UTF8', "CP1251");
-	$res = $this->save($target_file, $html);
+		$res= curl_exec($ch);
+		if (!$res){sleep($this->sleep);++$p;} //не скачался пауза в слееп
+		else {++$this->count;}
+	} //while 
+	if (!$res){return 'error '.curl_error($ch);}
+	$html= mb_convert_encoding($res,'UTF8', "CP1251");
+	$res = $this->save($target_file, $res);
+	curl_close($ch);
 	return $res;
-	}
-
+	}//get_1251_to_UTF
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Сохраняем файл
 	 * @param имя файла $target_file
@@ -404,16 +412,15 @@ class parse {
 	 * @param string $target_url
 	 * @param string $target_file_name
 	 * @param $try - поптыок скачать
-	 ** @return размер скачанного файла
-	 */
+	 * @return ok or errpr+
+	 **/
 	function get_url_to_file($target_url,$target_file_name,$try){
 		$this->try = $try;
-		if (file_exists($target_file_name)){$creation_date = date ("d.m.y", filemtime($target_file_name));}//else{$creation_date = 0;}
-		$today = date("d.m.y"); 
-		while (!$res or $p > $this->try){
-			if (file_exists($target_file_name) and filesize($target_file_name) and $today==$creation_date ){
-				$res = 'ok';
-			}else{
+		$p=0;
+		while (!$res and $p < $this->try){
+//			if (file_exists($target_file_name) and filesize($target_file_name)){
+//				$res = 'created';
+//			}else{
 				$userAgent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.0.8) Gecko/2009032609 Firefox/3.0.8';
 				$referer = 'z-ecx.image-amazon.com';
 				//$o = new output('Ошибки curl');
@@ -434,10 +441,10 @@ class parse {
 				$res =curl_exec($ch);
 				if (!$res){sleep($this->sleep);++$p;} //не скачался пауза в слееп
 				else {++$this->count;}
-			} //else есть файл 
+	//		} //else есть файл 
 		} //while 
 		if (!$res){
-			return 'error'.curl_error($ch);
+			return 'error '.curl_error($ch);
 			//$o->add('Немогу скачать '.$target_url);	
 		}
 	curl_close($ch);

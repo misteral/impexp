@@ -10,7 +10,7 @@ include('include/simple_html_dom.php');
 $db  = new ex_Mysql();
 //$db->clear(1); //почистим базу
 $pars = new parse();
-$out = new output('sima-kach');
+$o = new output('sima-kach');
 $out->echo = false;
 
 define ( 'DS', DIRECTORY_SEPARATOR );
@@ -23,20 +23,35 @@ define( '_TRY', 3); //количество попыток закачки
 //$pars->proxy = '67.205.68.11:8080';
 $pars->proxy = '10.44.33.88:8118';
 $pars->sleep = '5';
+//$pars->try = 3;
 
-//качаем каталог
-//echo 'Качаем каталог'; 
-//$res =  $pars->get_1251_to_UTF(TARGET.CATALOG, CPATH_BASE.DS."catalog.html");
-//if (!$res) {$out->add('Не могу скачать каталог!!!');exit();}
 $url = TARGET.CATALOG;
 $file = CPATH_BASE.DS."catalog.html";
-$res = $pars->get_url_to_file($url, $file, _TRY);
-exit;
+if (file_exists($file) and filesize($file)){$creation_date = date ("d.m.y", filemtime($file));}//else{$creation_date = 0;}
+$today = date("d.m.y"); 
+if ($creation_date<>$today){
+	$res = $pars->get_1251_to_UTF($url, $file, _TRY);
+	if ($res <> 'ok'){
+		$o->add('Немогу скачать каталог');
+		exit();
+	}else{
+	$o->add('Каталог закачан');
+	}//else файла нет
+}else{
+	$o->add('Файл существует и он не старее одного дня');
+} 
 
-$document = file_get_html(CPATH_BASE.DS."catalog.html");
 
-//разбираем каталог пишем в базу 
-foreach ($document->find('table[class=catalog-all-children-category] td')as $el2) { //нашли нужную таблицу
+//$html = file_get_contents(CPATH_BASE.DS."catalog.html");
+//$html= mb_convert_encoding($html,'UTF8', "CP1251");
+$html = file_get_html(CPATH_BASE.DS."catalog.html");
+
+$e = $html->find('table[class=catalog-all-children-category] td');
+if ($document->innertext!=='' and sizeof($e)) {$o->add('Количество элементов для обработки='.sizeof($e));}
+else {$o->add('!!!!!!!!!!!!НЕТ ЭЛЕМЕНТОВ ДЛЯ ОБРАБОТКИ!!!!!!подозрение изменения шаблона каталога');}
+
+exit();
+foreach ($e as $el2) { //нашли нужную таблицу
 	
 	$p = 0;
 	$parent=0;
