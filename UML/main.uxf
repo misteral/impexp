@@ -25,14 +25,14 @@
 
 
 // This text will be stored with each diagram;  use it for notes.</help_text>
-  <zoom_level>8</zoom_level>
+  <zoom_level>12</zoom_level>
   <element>
     <type>com.umlet.element.Package</type>
     <coordinates>
-      <x>616</x>
-      <y>248</y>
-      <w>112</w>
-      <h>56</h>
+      <x>384</x>
+      <y>300</y>
+      <w>168</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>parser-cat
 --
@@ -46,10 +46,10 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Package</type>
     <coordinates>
-      <x>616</x>
-      <y>152</y>
-      <w>112</w>
-      <h>56</h>
+      <x>384</x>
+      <y>156</y>
+      <w>168</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>sima-kach.php
 --
@@ -63,10 +63,10 @@ fg=dark_gray</panel_attributes>
   <element>
     <type>com.umlet.element.Package</type>
     <coordinates>
-      <x>616</x>
-      <y>336</y>
-      <w>112</w>
-      <h>56</h>
+      <x>384</x>
+      <y>432</y>
+      <w>168</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>sima-img-kach
 --
@@ -79,32 +79,32 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>640</x>
-      <y>184</y>
-      <w>40</w>
-      <h>80</h>
+      <x>420</x>
+      <y>204</y>
+      <w>60</w>
+      <h>120</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>24;64;24;24</additional_attributes>
+    <additional_attributes>36;96;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>648</x>
-      <y>280</y>
-      <w>40</w>
-      <h>72</h>
+      <x>432</x>
+      <y>348</y>
+      <w>60</w>
+      <h>108</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>24;56;24;24</additional_attributes>
+    <additional_attributes>36;84;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>896</x>
-      <y>264</y>
-      <w>64</w>
-      <h>24</h>
+      <x>804</x>
+      <y>324</y>
+      <w>96</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Пишем в базу
 с 0 статусом</panel_attributes>
@@ -113,10 +113,10 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>888</x>
-      <y>104</y>
-      <w>80</w>
-      <h>24</h>
+      <x>792</x>
+      <y>84</y>
+      <w>120</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Разбор пока есть
 стоки</panel_attributes>
@@ -125,10 +125,10 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1000</x>
+      <x>960</x>
       <y>144</y>
-      <w>80</w>
-      <h>24</h>
+      <w>120</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>$parent =
  $db-&gt;last_id()+1;</panel_attributes>
@@ -137,10 +137,10 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>888</x>
-      <y>64</y>
-      <w>80</w>
-      <h>32</h>
+      <x>792</x>
+      <y>24</y>
+      <w>120</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>Качаем каталог
 если нет файла
@@ -150,10 +150,10 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.UseCase</type>
     <coordinates>
-      <x>880</x>
-      <y>184</y>
-      <w>96</w>
-      <h>32</h>
+      <x>780</x>
+      <y>204</y>
+      <w>144</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>новая ?
 ::isnew()
@@ -163,10 +163,10 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.UseCase</type>
     <coordinates>
-      <x>880</x>
-      <y>136</y>
-      <w>96</w>
-      <h>32</h>
+      <x>780</x>
+      <y>132</y>
+      <w>144</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>Первая ?
 </panel_attributes>
@@ -175,35 +175,35 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>888</x>
+      <x>792</x>
       <y>144</y>
-      <w>72</w>
-      <h>56</h>
+      <w>108</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;- 
          нет</panel_attributes>
-    <additional_attributes>40;40;40;24</additional_attributes>
+    <additional_attributes>60;60;60;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>952</x>
-      <y>120</y>
-      <w>64</w>
-      <h>48</h>
+      <x>888</x>
+      <y>108</y>
+      <w>96</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;- 
 да
 </panel_attributes>
-    <additional_attributes>48;32;24;32</additional_attributes>
+    <additional_attributes>72;48;36;48</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.custom.Text</type>
     <coordinates>
-      <x>1056</x>
-      <y>120</y>
-      <w>80</w>
-      <h>32</h>
+      <x>1044</x>
+      <y>108</y>
+      <w>120</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>установим $parent 
 для следующих
@@ -213,58 +213,58 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>824</x>
-      <y>176</y>
-      <w>80</w>
-      <h>152</h>
+      <x>696</x>
+      <y>192</y>
+      <w>120</w>
+      <h>228</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;- 
         нет</panel_attributes>
-    <additional_attributes>64;136;40;136;40;56;56;24</additional_attributes>
+    <additional_attributes>96;204;60;204;60;84;84;36</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>792</x>
+      <y>216</y>
+      <w>114</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;- 
+         да</panel_attributes>
+    <additional_attributes>60;60;60;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>888</x>
-      <y>192</y>
-      <w>76</w>
-      <h>56</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;- 
-         да</panel_attributes>
-    <additional_attributes>40;40;40;24</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>952</x>
       <y>144</y>
-      <w>104</w>
-      <h>72</h>
+      <w>156</w>
+      <h>108</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;- 
 </panel_attributes>
-    <additional_attributes>24;56;88;24</additional_attributes>
+    <additional_attributes>36;84;132;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>904</x>
-      <y>72</y>
-      <w>40</w>
-      <h>48</h>
+      <x>816</x>
+      <y>36</y>
+      <w>60</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
-    <additional_attributes>24;32;24;24</additional_attributes>
+    <additional_attributes>36;48;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Package</type>
     <coordinates>
-      <x>816</x>
-      <y>48</y>
-      <w>456</w>
-      <h>864</h>
+      <x>684</x>
+      <y>0</y>
+      <w>684</w>
+      <h>1296</h>
     </coordinates>
     <panel_attributes>sima-kach.php
 </panel_attributes>
@@ -273,10 +273,10 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>888</x>
-      <y>296</y>
-      <w>80</w>
-      <h>24</h>
+      <x>792</x>
+      <y>372</y>
+      <w>120</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Разбор пока есть
 стоки</panel_attributes>
@@ -285,33 +285,33 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>832</x>
-      <y>88</y>
-      <w>72</w>
-      <h>232</h>
+      <x>708</x>
+      <y>60</y>
+      <w>108</w>
+      <h>348</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>56;24;24;56;24;216;56;216</additional_attributes>
+    <additional_attributes>84;36;36;84;36;324;84;324</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>904</x>
-      <y>264</y>
-      <w>40</w>
-      <h>48</h>
+      <x>816</x>
+      <y>324</y>
+      <w>60</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
-    <additional_attributes>24;32;24;24</additional_attributes>
+    <additional_attributes>36;48;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>880</x>
-      <y>328</y>
-      <w>96</w>
-      <h>32</h>
+      <x>780</x>
+      <y>420</y>
+      <w>144</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>Меняем статус (3)
 на категориях которые 
@@ -321,34 +321,34 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>904</x>
-      <y>296</y>
-      <w>40</w>
-      <h>48</h>
+      <x>816</x>
+      <y>372</y>
+      <w>60</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
-    <additional_attributes>24;32;24;24</additional_attributes>
+    <additional_attributes>36;48;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>904</x>
-      <y>104</y>
-      <w>40</w>
-      <h>48</h>
+      <x>816</x>
+      <y>84</y>
+      <w>60</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
-    <additional_attributes>24;32;24;24</additional_attributes>
+    <additional_attributes>36;48;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>880</x>
-      <y>368</y>
-      <w>96</w>
-      <h>24</h>
+      <x>780</x>
+      <y>480</y>
+      <w>144</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Цикл по берем из базы
 все группы 
@@ -358,10 +358,10 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.UseCase</type>
     <coordinates>
-      <x>880</x>
-      <y>400</y>
-      <w>96</w>
-      <h>32</h>
+      <x>780</x>
+      <y>528</y>
+      <w>144</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>Статус &lt;&gt; 3
 </panel_attributes>
@@ -370,69 +370,69 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>904</x>
-      <y>336</y>
-      <w>40</w>
-      <h>48</h>
+      <x>816</x>
+      <y>432</y>
+      <w>60</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
-    <additional_attributes>24;32;24;24</additional_attributes>
+    <additional_attributes>36;48;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>904</x>
-      <y>368</y>
-      <w>40</w>
-      <h>48</h>
+      <x>816</x>
+      <y>480</y>
+      <w>60</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
-    <additional_attributes>24;32;24;24</additional_attributes>
+    <additional_attributes>36;48;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>832</x>
-      <y>360</y>
-      <w>112</w>
-      <h>488</h>
+      <x>708</x>
+      <y>468</y>
+      <w>168</w>
+      <h>732</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>48;24;24;24;24;472;96;472</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>952</x>
-      <y>384</y>
-      <w>72</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;- 
-нет</panel_attributes>
-    <additional_attributes>56;32;24;32</additional_attributes>
+    <additional_attributes>72;36;36;36;36;708;144;708</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>888</x>
-      <y>408</y>
-      <w>76</w>
-      <h>56</h>
+      <y>504</y>
+      <w>108</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;- 
+нет</panel_attributes>
+    <additional_attributes>84;48;36;48</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>792</x>
+      <y>540</y>
+      <w>114</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;- 
          да</panel_attributes>
-    <additional_attributes>40;40;40;24</additional_attributes>
+    <additional_attributes>60;60;60;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>888</x>
-      <y>448</y>
-      <w>80</w>
-      <h>24</h>
+      <x>792</x>
+      <y>600</y>
+      <w>120</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Замена урл 
 на станица с 500</panel_attributes>
@@ -441,10 +441,10 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>888</x>
-      <y>480</y>
-      <w>80</w>
-      <h>24</h>
+      <x>792</x>
+      <y>648</y>
+      <w>120</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Пишем в лог 
 название категории</panel_attributes>
@@ -453,45 +453,45 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>904</x>
-      <y>448</y>
-      <w>40</w>
-      <h>48</h>
+      <x>816</x>
+      <y>600</y>
+      <w>60</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
-    <additional_attributes>24;32;24;24</additional_attributes>
+    <additional_attributes>36;48;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>904</x>
-      <y>480</y>
-      <w>40</w>
-      <h>80</h>
+      <x>816</x>
+      <y>648</y>
+      <w>60</w>
+      <h>120</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
-    <additional_attributes>24;64;24;24</additional_attributes>
+    <additional_attributes>36;96;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>392</x>
-      <y>520</y>
-      <w>112</w>
-      <h>216</h>
+      <x>48</x>
+      <y>708</y>
+      <w>168</w>
+      <h>324</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>40;24;24;24;24;192;96;200</additional_attributes>
+    <additional_attributes>60;36;36;36;36;288;144;300</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>576</x>
-      <y>688</y>
-      <w>80</w>
-      <h>24</h>
+      <x>324</x>
+      <y>960</y>
+      <w>120</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>++$p 
 попытки закачки</panel_attributes>
@@ -500,10 +500,10 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>696</x>
-      <y>600</y>
-      <w>80</w>
-      <h>24</h>
+      <x>504</x>
+      <y>828</y>
+      <w>120</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Пауза в 10 сек</panel_attributes>
     <additional_attributes/>
@@ -511,10 +511,10 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1008</x>
-      <y>752</y>
-      <w>80</w>
-      <h>24</h>
+      <x>972</x>
+      <y>1056</y>
+      <w>120</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Пишем в лог
 скачалось $res</panel_attributes>
@@ -523,22 +523,22 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>456</x>
-      <y>672</y>
-      <w>40</w>
-      <h>88</h>
+      <x>144</x>
+      <y>936</y>
+      <w>60</w>
+      <h>132</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
-    <additional_attributes>24;72;24;24</additional_attributes>
+    <additional_attributes>36;108;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.UseCase</type>
     <coordinates>
-      <x>880</x>
-      <y>728</y>
-      <w>96</w>
-      <h>32</h>
+      <x>780</x>
+      <y>1020</y>
+      <w>144</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>$res
 (скачался)
@@ -548,34 +548,34 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>464</x>
-      <y>680</y>
-      <w>128</w>
-      <h>64</h>
+      <x>156</x>
+      <y>948</y>
+      <w>192</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>24;48;112;24</additional_attributes>
+    <additional_attributes>36;72;168;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>952</x>
-      <y>720</y>
-      <w>72</w>
-      <h>56</h>
+      <x>888</x>
+      <y>1008</y>
+      <w>108</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;- 
 да
 </panel_attributes>
-    <additional_attributes>56;40;24;24</additional_attributes>
+    <additional_attributes>84;60;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>888</x>
-      <y>776</y>
-      <w>80</w>
-      <h>32</h>
+      <x>792</x>
+      <y>1092</y>
+      <w>120</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>Не могу 
 скачать категорию
@@ -585,45 +585,45 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>888</x>
-      <y>736</y>
-      <w>72</w>
-      <h>56</h>
+      <x>792</x>
+      <y>1032</y>
+      <w>108</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=-&lt;&lt; 
          нет</panel_attributes>
-    <additional_attributes>40;40;40;24</additional_attributes>
+    <additional_attributes>60;60;60;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>904</x>
-      <y>784</y>
-      <w>40</w>
-      <h>80</h>
+      <x>816</x>
+      <y>1104</y>
+      <w>60</w>
+      <h>120</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
-    <additional_attributes>24;64;24;24</additional_attributes>
+    <additional_attributes>36;96;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>904</x>
-      <y>752</y>
-      <w>168</w>
-      <h>80</h>
+      <x>816</x>
+      <y>1056</y>
+      <w>252</w>
+      <h>120</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>24;64;152;64;152;24</additional_attributes>
+    <additional_attributes>36;96;228;96;228;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1008</x>
-      <y>408</y>
-      <w>104</w>
-      <h>32</h>
+      <x>972</x>
+      <y>540</y>
+      <w>156</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>лог:
 пропуск группы такой то
@@ -633,21 +633,21 @@ fg=red</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>904</x>
-      <y>400</y>
-      <w>344</w>
-      <h>440</h>
+      <x>816</x>
+      <y>528</y>
+      <w>516</w>
+      <h>660</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>24;424;328;424;328;24;208;24</additional_attributes>
+    <additional_attributes>36;636;492;636;492;36;312;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Note</type>
     <coordinates>
-      <x>1160</x>
-      <y>368</y>
-      <w>72</w>
-      <h>16</h>
+      <x>1200</x>
+      <y>480</y>
+      <w>108</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>*Часть закачки*
 bg=blue</panel_attributes>
@@ -656,21 +656,21 @@ bg=blue</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>808</x>
-      <y>344</y>
-      <w>440</w>
-      <h>40</h>
+      <x>672</x>
+      <y>444</y>
+      <w>660</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=..</panel_attributes>
-    <additional_attributes>24;24;424;24</additional_attributes>
+    <additional_attributes>36;36;636;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>880</x>
-      <y>232</y>
-      <w>96</w>
-      <h>24</h>
+      <x>780</x>
+      <y>276</y>
+      <w>144</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>++Счетчик
 добавленных категори</panel_attributes>
@@ -679,22 +679,22 @@ bg=blue</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>904</x>
-      <y>232</y>
-      <w>40</w>
-      <h>48</h>
+      <x>816</x>
+      <y>276</y>
+      <w>60</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
-    <additional_attributes>24;32;24;24</additional_attributes>
+    <additional_attributes>36;48;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Package</type>
     <coordinates>
-      <x>400</x>
-      <y>496</y>
-      <w>384</w>
-      <h>256</h>
+      <x>60</x>
+      <y>672</y>
+      <w>576</w>
+      <h>384</h>
     </coordinates>
     <panel_attributes>Parser::get_url_to_file(url,target_file,try)
 return 'ok' or error on error
@@ -704,10 +704,10 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>896</x>
-      <y>848</y>
-      <w>80</w>
-      <h>24</h>
+      <x>804</x>
+      <y>1200</y>
+      <w>120</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Конец</panel_attributes>
     <additional_attributes/>
@@ -715,10 +715,10 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>432</x>
-      <y>616</y>
-      <w>96</w>
-      <h>24</h>
+      <x>108</x>
+      <y>852</y>
+      <w>144</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Не качем есть
 пишем в лог есть файл</panel_attributes>
@@ -727,10 +727,10 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>440</x>
-      <y>528</y>
-      <w>80</w>
-      <h>24</h>
+      <x>120</x>
+      <y>720</y>
+      <w>120</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>пока нет $res
 или кол попыток&gt;_TRY</panel_attributes>
@@ -739,10 +739,10 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.UseCase</type>
     <coordinates>
-      <x>432</x>
-      <y>560</y>
-      <w>104</w>
-      <h>40</h>
+      <x>108</x>
+      <y>768</y>
+      <w>156</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>Есть ли файл и длина
 и датафайла сегодня </panel_attributes>
@@ -751,36 +751,36 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>440</x>
-      <y>576</y>
-      <w>76</w>
-      <h>56</h>
+      <x>120</x>
+      <y>792</y>
+      <w>114</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;- 
          да
 </panel_attributes>
-    <additional_attributes>40;40;40;24</additional_attributes>
+    <additional_attributes>60;60;60;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>512</x>
-      <y>544</y>
-      <w>80</w>
-      <h>48</h>
+      <x>228</x>
+      <y>744</y>
+      <w>120</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;- 
 нет
 </panel_attributes>
-    <additional_attributes>64;32;24;32</additional_attributes>
+    <additional_attributes>96;48;36;48</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>576</x>
-      <y>568</y>
-      <w>80</w>
-      <h>24</h>
+      <x>324</x>
+      <y>780</y>
+      <w>120</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>качаем файл</panel_attributes>
     <additional_attributes/>
@@ -788,10 +788,10 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>440</x>
-      <y>672</y>
-      <w>80</w>
-      <h>24</h>
+      <x>120</x>
+      <y>936</y>
+      <w>120</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>$res установим 
 размер файла</panel_attributes>
@@ -800,10 +800,10 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.UseCase</type>
     <coordinates>
-      <x>568</x>
-      <y>600</y>
-      <w>96</w>
-      <h>32</h>
+      <x>312</x>
+      <y>828</y>
+      <w>144</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>Нет $ res
 (не скачался)
@@ -813,70 +813,70 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>640</x>
-      <y>584</y>
-      <w>72</w>
-      <h>48</h>
+      <x>420</x>
+      <y>804</y>
+      <w>108</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;- 
 да
 </panel_attributes>
-    <additional_attributes>56;32;24;32</additional_attributes>
+    <additional_attributes>84;48;36;48</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>592</x>
-      <y>608</y>
-      <w>160</w>
-      <h>88</h>
+      <x>348</x>
+      <y>840</y>
+      <w>240</w>
+      <h>132</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>24;72;144;72;144;24</additional_attributes>
+    <additional_attributes>36;108;216;108;216;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>456</x>
-      <y>528</y>
-      <w>40</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>lt=- 
-</panel_attributes>
-    <additional_attributes>24;32;24;24</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>592</x>
-      <y>568</y>
-      <w>40</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>lt=- 
-</panel_attributes>
-    <additional_attributes>24;32;24;24</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>456</x>
-      <y>616</y>
-      <w>40</w>
+      <x>144</x>
+      <y>720</y>
+      <w>60</w>
       <h>72</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
-    <additional_attributes>24;56;24;24</additional_attributes>
+    <additional_attributes>36;48;36;36</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>348</x>
+      <y>780</y>
+      <w>60</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=- 
+</panel_attributes>
+    <additional_attributes>36;48;36;36</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>144</x>
+      <y>852</y>
+      <w>60</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>lt=- 
+</panel_attributes>
+    <additional_attributes>36;84;36;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>576</x>
-      <y>648</y>
-      <w>80</w>
-      <h>24</h>
+      <x>324</x>
+      <y>900</y>
+      <w>120</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>++$p 
 счетчик скачанных</panel_attributes>
@@ -885,25 +885,25 @@ bg=orange</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>576</x>
-      <y>608</y>
-      <w>72</w>
-      <h>56</h>
+      <x>324</x>
+      <y>840</y>
+      <w>108</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=-&lt;&lt; 
          нет</panel_attributes>
-    <additional_attributes>40;40;40;24</additional_attributes>
+    <additional_attributes>60;60;60;36</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>592</x>
-      <y>648</y>
-      <w>40</w>
-      <h>56</h>
+      <x>348</x>
+      <y>900</y>
+      <w>60</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
-    <additional_attributes>24;40;24;24</additional_attributes>
+    <additional_attributes>36;60;36;36</additional_attributes>
   </element>
 </diagram>
