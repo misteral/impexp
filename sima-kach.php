@@ -140,7 +140,10 @@ foreach ($rows as $value){
 					$o->add('Категория скачана');
 					$db->update_status(1, $value->product_id);
 						}//else файла нет
-			}else{$o->add('Файл  существует и он не старее одного дня');	} 
+			}else{
+				$o->add('Файл  существует и он не старее одного дня');
+				$db->update_status(1, $value->product_id);	
+			} 
 	}else{ //не качаем если статус 3
 		$o->add('Пропускаем группу '.$value->product_name);	
 	}

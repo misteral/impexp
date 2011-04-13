@@ -1,4 +1,6 @@
 <?php
+
+
 // описание 
 
 ini_set ( 'max_execution_time', 0);// убираем ограничение по времени;
@@ -27,17 +29,21 @@ $count = 0;
 $rows = $db->child_gr();
 $o->add('Количество категорий для обработки '.sizeof($rows));
 foreach ($rows as $value){
-if (!$value->product_status<>1){//не обрабатываем если не скачан или обработан
+if ($value->product_status==1){//не обрабатываем если не скачан или обработан
+	$o->timer_start(); // стартанем таймер
 	$dop = 1;
 	$id = $value->product_id;
-	$document = file_get_html(CPATH_BASE.DS.$id.'_'.$dop.'.html');
-	$e=$document->find('table[class=item-list] tr[id=item-list-tr]'); //нашли нужную таблицу
 	$o->add('Начинаем обработку категории '.$value->product_name.'. Файл='.$id.'_'.$dop.'.html');
-	if ($document->innertext!=='' and !sizeof($e)) {$o->add('Количество элементов для обработки='.sizeof($e));}
-		else {$o->add('!!!!!!!!!!!!!!!!!!!!!!!!!!!!НЕТ ЭЛЕМЕНТОВ ДЛЯ ОБРАБОТКИ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');}
+	$file = CPATH_BASE.DS.$id.'_'.$dop.'.html';
+	if (!file_exists($file) or !filesize($file)){$o->add('Отсутствует файл категории');continue;}
+	$document = file_get_html($file);
+	unset($file);
+	$e=$document->find('table[class=item-list] tr[id=item-list-tr]'); //нашли нужную таблицу
+	if ($document->innertext!=='' and !sizeof($e)) {$o->add('!!!!!!!!!!!!НЕТ ЭЛЕМЕНТОВ ДЛЯ ОБРАБОТКИ!!!!!!!!!!!!!!!!Подозрение на изменение шаблона!');continue;}
+		else {$o->add('Количество элементов для обработки='.sizeof($e));}
 		foreach ($e as $el1) { 
 			$item = new item_VM();
-			$lid=$db->last_id()+1;
+			//$lid=$db->last_id()+1;
 			
 			$look = $o->chk($el1->getElementByTagName('td.item-list-name-photo a'), '!!!!!! Пуст родительский элемент td.item-list-name-photo');
 			if (!$skip){$item->product_name=@mysql_escape_string($o->ch($look->text(),'Имя продукта пустое!!!!!!!!!!'));}		
@@ -88,8 +94,12 @@ if (!$value->product_status<>1){//не обрабатываем если не с
 				$item->product_parent_id = $id;
 				$item->product_vendor = VENDOR;
 				$item->product_status = 2; //закачан
-				$db->add($item);
-				$count = $count+1;
+				if ($th_id = $db->get_id($item->product_name, $item->product_sku, $item->product_parent_id)){//найден такой же
+					$db->update($item,$th_id);
+				}else {//новый элемент
+					$db->add($item);
+					$count = $count+1; // общий подсчет
+				}
 			}else {
 				$db->count_inc('skip');
 				$skip = false;
@@ -100,13 +110,25 @@ if (!$value->product_status<>1){//не обрабатываем если не с
 		//exit();
 	}//цикл по строкам таблицы
 	$db->update_status(2, $id);
-	$o->add('Категория ' .$value->product_name.' id =  '.$value->product_id.' закончена, обработано '.$db->count_get('add').', пропущено '.$db->count_get('skip'));
-	$o->add('------------------------------------------------------------------------------------------------------------------------');
-	$db->count_reset('add');$db->count_reset('skip'); //обнулим счетчики на категории
-	$document->clear(); 
+// освободим переменные	
+	
+	if ($document instanceof simple_html_dom){$document>clear();}; 
 	unset($document);
+	//if ($look instanceof simple_html_dom_node){$look>clear();};
+	unset($look);
+	//if ($el1 instanceof simple_html_dom_node){$el1>clear();}; 
+	unset($el1);
+	unset($e);
+	
+	$o->add('Категория ' .$value->product_name.' id =  '.$value->product_id.' add:'.$db->count_get('add').', skip:'.$db->count_get('skip').', update:'.$db->count_get('update').'Выполенено за:'.$o->timer_get() );
+	$o->add('------------------------------------------------------------------------------------------------------------------------');
+	$db->count_reset('add');$db->count_reset('skip'); $db->count_reset('update'); //обнулим счетчики на категории
+	
 }	//не обрабатываем если не скачан
 } //идем по целевым группам
+
+$o->add('------------------------------------------------------------------------------------------------------------------------');
+$o->add('------------------------------------------------------------------------------------------------------------------------');
 $o->add('Количество добавленных элементов '.$count);
 
 

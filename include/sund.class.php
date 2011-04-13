@@ -1,11 +1,12 @@
 <?php 
+
 //require_once 'ErrorManager.php';
 
 /**
  * Класс для работы с mysql
  * @author BobrovAV
- *
- */
+ * @version = 0.0.1
+ **/
 class ex_Mysql {
 	private $count = array(
 		'add'=>0,
@@ -112,9 +113,25 @@ class ex_Mysql {
 	$res = $this->query($query);
 	$this->count_inc('add');
 	}
+
 	
-	
-	function update ($it){
+	/**
+	 * Обновляет путем итерации свойств объекта
+	 * @param item_VM $itemVM
+	 */
+	function update (item_VM $itemVM, $id){
+		//$id = $itemVM->product_id;
+		foreach ($itemVM as $key => $value){
+			if (!$value){continue;} //пропускаем если нет элемента
+			$q = "update jos_al_import 
+			set ".$key." = '".$value."'
+			where product_id = ".$id."
+			;"
+			;
+			$res = $this->query($q);
+			$this->count_inc('update'); 
+		}
+		
 		
 	}
 	
@@ -342,7 +359,7 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 	 * @param unknown_type $product_name
 	 * @param unknown_type $product_sku
 	 * @param unknown_type $product_parent_id
-	 * @return id
+	 * @return id or false если нет такого 
 	 */
 	function get_id($product_name, $product_sku, $product_parent_id){
 		$q = "select product_id as id from jos_al_import where
@@ -353,7 +370,8 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 		$res = $this->query($q);
 		$last = @mysql_fetch_array($res);
 		if (@mysql_num_rows($last)>1){$this->errorer('get_id вернуло больше одного, полный дубляж категории');exit;}
-        $last = $last['id'];
+		$last = $last['id'];
+		if (!$last){return false;}// не нашел такого элемента
         return $last;	
 	}
 
@@ -568,6 +586,7 @@ class output  {
 	public  $vendor;
 	private $path_log;
 	private $file;
+	private $timer_time;
 	
 //Имя лог-файла, куда ведем запись
 //  private $logfile;
@@ -622,11 +641,15 @@ class output  {
 		return $text;
 		
 	}*/
+	
+	
 	private function TimeMeasure() {
 	$q =  explode(chr(32), microtime());
 	list($msec, $sec)= $q;  
     return ($sec+$msec);
 	}
+	
+	
 	/**
 	 * Возвращает время выполнения скрипта
 	 * @return number
@@ -664,6 +687,23 @@ class output  {
 			$skip = true;
 		}
 	}//f chk
-} //output
+	
+	/**
+	 * Засечь таймер(включить)
+	 */
+	function timer_start() {
+		$this->timer_time = $this->TimeMeasure();;
+	}
+	
+	/**
+	 * Время засекания
+	 * @return number
+	 */
+	function timer_get() {
+		return round($this->TimeMeasure()-$this->timer_time, 6);
+	}
+
+} 
+//output
 
 ?>
