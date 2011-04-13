@@ -59,6 +59,7 @@ foreach ($e as $el2) { //нашли нужную таблицу
 	$cat_first = true;
 	$p = 0; //Считаем категории
 	$parent=0;
+	$parent_name = '';
 	$e2 = $el2->find('a');//,'Не найден тег а !!!!! подозрение изменения шаблона каталога'); // вся нуная нам инфа в теге а
 	if ($el2->innertext!=='' and !sizeof($e2)) {$o->add('Не найден тег а !!!!! подозрение изменения шаблона каталога');}
 	foreach ($e2 as $el3){  // цикл по тегу а 
@@ -80,13 +81,18 @@ foreach ($e as $el2) { //нашли нужную таблицу
 			if ($db->isnew($item->product_name, $item->product_sku, $item->product_parent_id)){ // новая ? 
 				$parent = 0;
 				$item->product_parent_id = $parent;
-				++$p;
+				//++$p;
 				$db->add($item);
 				$parent = $db->last_id();
+				$o->add('!!!Новая головная категория '.$item->product_name);
+				
 			}else {// первая не новая
 				$parent = $db->get_id($item->product_name, $item->product_sku, $item->product_parent_id);  // установим парент на текущую
+				//$o->add('Категория '.$item->product_name);
+				
 				}
-			$cat_first = FALSE;	
+			$cat_first = FALSE;
+			$parent_name = $item->product_name;	
 		} else {//не первая 
 			if ($db->isnew($item->product_name, $item->product_sku, $item->product_parent_id)){ // не первая, новая ? 
 				++$p;
@@ -94,9 +100,10 @@ foreach ($e as $el2) { //нашли нужную таблицу
 			}
 		}//не первая 
 	}// цикл по тегу а 
-		$o->add('Добавлено новых категори и подкатегорий: '.$p);
-		$o->add('--------------------------------------------------------------');
-
+		if ($p){
+			$o->add('Головная категория '.$parent_name.' Добавлено новых подкатегорий: '.$p);
+			$o->add('--------------------------------------------------------------');
+		}
 }//нашли нужную таблицу
 
 // изменим статус на другой чтоб не качал эти категории 
@@ -118,7 +125,7 @@ foreach ($rows as $value){
 		$arr = explode('/', $url);
 		$arr[4] = 500;
 		$url = implode('/', $arr);
-		$out->add('Качаем категорию '.$value->product_name.' с адреса '.TARGET.$url.'</br>');
+		$o->add('Качаем категорию '.$value->product_name.' с адреса '.TARGET.$url);
 		$p=1;
 		unset($res);
 		$url = TARGET.$url;
@@ -128,12 +135,12 @@ foreach ($rows as $value){
 			if ($creation_date<>$today){
 				$res = $pars->get_1251_to_UTF($url, $file, _TRY);
 				if ($res <> 'ok'){
-					$o->add('!!!!!!!!!Немогу скачать категорию '. $value->product_url);
+					$o->add('!!!!!!!!!Немогу скачать категорию '. $value->product_name);
 				}else{
 					$o->add('Категория скачана');
 					$db->update_status(1, $value->product_id);
 						}//else файла нет
-			}else{$o->add('Файл существует и он не старее одного дня');	} 
+			}else{$o->add('Файл  существует и он не старее одного дня');	} 
 	}else{ //не качаем если статус 3
 		$o->add('Пропускаем группу '.$value->product_name);	
 	}
