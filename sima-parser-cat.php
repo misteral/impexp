@@ -111,8 +111,9 @@ if ($value->product_status==1){//не обрабатываем если не с�
 	}//цикл по строкам таблицы
 	$db->update_status(2, $id);
 // освободим переменные	
+		 
 	
-	if ($document instanceof simple_html_dom){$document>clear();}; 
+	if ($document instanceof simple_html_dom){$document->clear();}; 
 	unset($document);
 	//if ($look instanceof simple_html_dom_node){$look>clear();};
 	unset($look);
