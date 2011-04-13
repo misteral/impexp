@@ -51,11 +51,12 @@ $html = file_get_html(CPATH_BASE.DS."catalog.html");
 $e = $html->find('table[class=catalog-all-children-category] td');
 if ($html->innertext!=='' and !sizeof($e)) {$o->add('!!!!!!!!!!!!НЕТ ЭЛЕМЕНТОВ ДЛЯ ОБРАБОТКИ!!!!!!подозрение изменения шаблона каталога class=catalog-all-children-category] td');exit();}
 else {$o->add('Количество элементов для обработки='.sizeof($e));}
+$o->add('--------------------------------------------------------------');
 //$html->clear();
 unset($file);
 //exit();
 foreach ($e as $el2) { //нашли нужную таблицу
-	
+	$cat_first = true;
 	$p = 0; //Считаем категории
 	$parent=0;
 	$e2 = $el2->find('a');//,'Не найден тег а !!!!! подозрение изменения шаблона каталога'); // вся нуная нам инфа в теге а
@@ -70,25 +71,34 @@ foreach ($e as $el2) { //нашли нужную таблицу
 		$item->product_sku = $arr[2];
 		$item->product_name = $title;
 		$item->product_url = $title_link;
-
-		
 		$item->product_parent_id = $parent;
 		$item->product_isgroup = 1;
 		$item->product_vendor = VENDOR;
 		$item->product_price = 0;
 		$item->product_status = 0;
-		if ($p ==0){ //идем по головным категориям
-    		$parent = $db->last_id()+1;
-		}
-		$res = $db->isnew($item->product_name, $item->product_sku, $item->product_parent_id); 
-		if ($res){//Есть ли такой в базе 
-		++$p;
-		$db->add($item);
-		}//Есть ли такой в базе
+		if ($cat_first){//первая
+			if ($db->isnew($item->product_name, $item->product_sku, $item->product_parent_id)){ // новая ? 
+				$parent = 0;
+				$item->product_parent_id = $parent;
+				++$p;
+				$db->add($item);
+				$parent = $db->last_id();
+			}else {// первая не новая
+				$parent = $db->get_id($item->product_name, $item->product_sku, $item->product_parent_id);  // установим парент на текущую
+				}
+			$cat_first = FALSE;	
+		} else {//не первая 
+			if ($db->isnew($item->product_name, $item->product_sku, $item->product_parent_id)){ // не первая, новая ? 
+				++$p;
+				$db->add($item);
+			}
+		}//не первая 
 	}// цикл по тегу а 
+		$o->add('Добавлено новых категори и подкатегорий: '.$p);
+		$o->add('--------------------------------------------------------------');
+
 }//нашли нужную таблицу
-$o->add('Добавлено новых категорий ;'.$p);
-unset($p);
+
 // изменим статус на другой чтоб не качал эти категории 
 $db->change_status('игрушка', 3, VENDOR);
 

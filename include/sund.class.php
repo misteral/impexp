@@ -68,6 +68,13 @@ class ex_Mysql {
 		}
 		else{ return mysql_fetch_array($res);mysql_free_result($res);}
 	}
+	
+	
+	
+	/**
+	 Добавляем в базу
+	 * @param unknown_type $item_VM
+	 */
 	function add ($it){
 	$query = "
 	insert into jos_al_import(
@@ -105,9 +112,16 @@ class ex_Mysql {
 	$res = $this->query($query);
 	$this->count_inc('add');
 	}
+	
+	
 	function update ($it){
 		
 	}
+	
+	/**
+	 * Возвращает последний ID
+	 * @return Ambigous <number, unknown>
+	 */
 	function last_id(){
 	    $q = 'SELECT MAX(product_id) as id FROM jos_al_import;';
 		$res = $this->query($q);
@@ -116,9 +130,18 @@ class ex_Mysql {
         if (!$last){$last = 0;}
         return $last;	
 	}
+	
+	
 	function del($it){}
 
 	
+	/**
+	 Новая или нет определяет по $product_name, $product_sku, $product_parent_id
+	 * @param  $product_name
+	 * @param  $product_sku
+	 * @param  $product_parent_id
+	 * @return true or false
+	 */
 	function isnew($product_name, $product_sku, $product_parent_id) {
 		$q = "select COUNT(*) as cn from jos_al_import where
 			product_name ='".$product_name."' 
@@ -133,6 +156,11 @@ class ex_Mysql {
         return $last;	
 	}
 	
+	
+	/**
+	 * Чистит базу
+	 * @param unknown_type $product_vendor
+	 */
 	function clear($product_vendor = 0){
 		if($product_vendor_id){
 			$q= 'delete from jos_al_import where product_vendor ='.$product_vendor.';';
@@ -141,6 +169,7 @@ class ex_Mysql {
 		$res = $this->query($q);
 		
 	}
+
 	/**
 	 * Не работает.
 	 */
@@ -169,7 +198,8 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 		";
 	$res = $this->query($q);
 	} 
-/**Возвращает подчиненные группы */
+
+/**Возвращает все подчиненные группы (весь второй уровень)  */
 	function child_gr(){
 	$q = 'select * from jos_al_import where product_parent_id<>0 and product_isgroup = true
 			union
@@ -197,10 +227,14 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
     mysql_free_result($res);
     return $e_arr; 	
 	}
+
+
 /**Возвращает головные группы */
 	function parent_gr() {
 		
 	}
+	
+
 	
 	/**
 	 * Обновляет статус продукта и ставит дату в product_date_add 
@@ -215,6 +249,7 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 		where product_id =".$id.";";
 		$res = $this->query($q);
 	}
+
 	/**
 	 * Возвращает статтус продукта и дату обновления
 	 * @param unknown_type $id
@@ -225,6 +260,8 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 		$res = @mysql_fetch_array($this->query($q));
 		return $res;
 	}
+
+	
 	/**
 	 * !!!!!!  не работает Удаляет категорию полностью включая подчиненные группы и товары
 	 * не проверена
@@ -246,6 +283,8 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 			}
 		}
 	}
+
+	
 	/**
 	 * Смена статуса у группы с глубиной 3 сверху вниз
 	 * @param unknown_type $cat_name
@@ -272,17 +311,61 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 			}
 		mysql_free_result($res);
 	}
+
+	
 	/**
 	 * Берет продукты из категории
-	 * @param unknown_type $id
+	 * мертвая функция
+	 * @param unknown_type $id  парент
 	 * @return array
 	 */
-	function get_product($id) {
+	function _get_product($id) {
 		$q = 'select * from jos_al_import where product_parent_id ='.$id;
 		$res = $this->query($q);
 		return $res;
+	} //_get_product($id)
+
+	
+	
+	/**
+	 * Берем все по ID продукта ...
+	 * @param unknown_type $id
+	 */
+	function get_from_id($id) {
+		$q = 'select * from jos_al_import where product_id ='.$id;
+		$res = $this->query($q);
+		return @mysql_fetch_array($res);
+	} //_get_product($id)
+	
+	/**
+	 * Берет Id по совпадению $product_name, $product_sku, $product_parent_id
+	 * @param unknown_type $product_name
+	 * @param unknown_type $product_sku
+	 * @param unknown_type $product_parent_id
+	 * @return id
+	 */
+	function get_id($product_name, $product_sku, $product_parent_id){
+		$q = "select product_id as id from jos_al_import where
+		product_name ='".$product_name."' 
+		and product_sku = '".$product_sku."' 
+		and product_parent_id = '".$product_parent_id."' 
+		";
+		$res = $this->query($q);
+		$last = @mysql_fetch_array($res);
+		if (@mysql_num_rows($last)>1){$this->errorer('get_id вернуло больше одного, полный дубляж категории');exit;}
+        $last = $last['id'];
+        return $last;	
 	}
 
+	/**
+	 * Пишет в class log
+	 * @param unknown_type $txt
+	 */
+	function errorer($txt){
+		$er = new output('class');
+		$er->add($txt);
+	}
+	
 } // class my_sql
 /**
  * Класс элемента товара в виртуе март
@@ -582,10 +665,5 @@ class output  {
 		}
 	}//f chk
 } //output
-
-
-
-
-
 
 ?>
