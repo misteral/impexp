@@ -64,7 +64,7 @@ if ($value->product_status==1){//не обрабатываем если не с�
 			if (!$skip){$look= $o->chk($el1->getElementByTagName('td.item-list-name-photo a'),'!!!!!!Пустой родителький элемент td.item-list-name-photo a');}
 			if (!$skip){$item->product_url = $o->ch($look->href,'Ссылка пустая у '.$item->product_name);}
 			
-			if (!$skip){$look= $o->chk($el1->getElementByTagName('div.itemlistunit'),'');
+			if (!$skip){$look= $o->chk($el1->getElementByTagName('div.itemlistunit'),'нет единицы измерения вставим свою');
 				//на некоторых единицы не запонены заполним шт и продолжим
 				if (!$skip){$item->product_ed = $o->ch($look->text(),'Ед пустая у '.$item->product_name);}
 				if ($skip){$skip = false; $item->product_ed = 'шт';}
@@ -121,7 +121,7 @@ if ($value->product_status==1){//не обрабатываем если не с�
 	unset($el1);
 	unset($e);
 	
-	$o->add('Категория ' .$value->product_name.' id =  '.$value->product_id.' add:'.$db->count_get('add').', skip:'.$db->count_get('skip').', update:'.$db->count_get('update').'Выполенено за:'.$o->timer_get() );
+	$o->add('Категория ' .$value->product_name.' id =  '.$value->product_id.' add:'.$db->count_get('add').', skip:'.$db->count_get('skip').', update:'.$db->count_get('update').' Выполенено за:'.$o->timer_get() );
 	$o->add('------------------------------------------------------------------------------------------------------------------------');
 	$db->count_reset('add');$db->count_reset('skip'); $db->count_reset('update'); //обнулим счетчики на категории
 	

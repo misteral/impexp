@@ -129,10 +129,8 @@ class ex_Mysql {
 			;"
 			;
 			$res = $this->query($q);
-			$this->count_inc('update'); 
 		}
-		
-		
+		$this->count_inc('update'); 
 	}
 	
 	/**
@@ -608,7 +606,10 @@ class output  {
 			
 	}
 	function __destruct() {
-		$this->add("\r\n".'Время выполнения скрипта '.$this->exec_time().' сек.' ) ;
+		$now_time = $this->exec_time(); //посчитаем время
+		$min = round ($now_time/60);
+		$sec = $now_time - 60*$min ;
+		$this->add('Время выполнения скрипта '.$min.' мин., '.round($sec,3).' сек.') ;
 	}
 	
 	/**
