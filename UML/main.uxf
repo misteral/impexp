@@ -395,8 +395,8 @@ fg=red</panel_attributes>
     <coordinates>
       <x>0</x>
       <y>21</y>
-      <w>98</w>
-      <h>189</h>
+      <w>97</w>
+      <h>188</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>35;21;21;21;21;168;84;175</additional_attributes>
@@ -441,8 +441,8 @@ fg=red</panel_attributes>
     <coordinates>
       <x>56</x>
       <y>154</y>
-      <w>35</w>
-      <h>77</h>
+      <w>34</w>
+      <h>76</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
@@ -466,8 +466,8 @@ fg=red</panel_attributes>
     <coordinates>
       <x>63</x>
       <y>161</y>
-      <w>112</w>
-      <h>56</h>
+      <w>111</w>
+      <h>55</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>21;42;98;21</additional_attributes>
@@ -657,8 +657,8 @@ bg=orange</panel_attributes>
     <coordinates>
       <x>42</x>
       <y>70</y>
-      <w>63</w>
-      <h>49</h>
+      <w>66</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;- 
          да
@@ -670,7 +670,7 @@ bg=orange</panel_attributes>
     <coordinates>
       <x>105</x>
       <y>42</y>
-      <w>70</w>
+      <w>69</w>
       <h>42</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;- 
@@ -719,7 +719,7 @@ bg=orange</panel_attributes>
     <coordinates>
       <x>217</x>
       <y>77</y>
-      <w>63</w>
+      <w>62</w>
       <h>42</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;- 
@@ -732,8 +732,8 @@ bg=orange</panel_attributes>
     <coordinates>
       <x>175</x>
       <y>98</y>
-      <w>140</w>
-      <h>77</h>
+      <w>139</w>
+      <h>76</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>21;63;126;63;126;21</additional_attributes>
@@ -743,8 +743,8 @@ bg=orange</panel_attributes>
     <coordinates>
       <x>56</x>
       <y>28</y>
-      <w>35</w>
-      <h>42</h>
+      <w>34</w>
+      <h>41</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
@@ -755,8 +755,8 @@ bg=orange</panel_attributes>
     <coordinates>
       <x>175</x>
       <y>63</y>
-      <w>35</w>
-      <h>42</h>
+      <w>34</w>
+      <h>41</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
@@ -767,8 +767,8 @@ bg=orange</panel_attributes>
     <coordinates>
       <x>56</x>
       <y>105</y>
-      <w>35</w>
-      <h>63</h>
+      <w>34</w>
+      <h>62</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>
@@ -792,7 +792,7 @@ bg=orange</panel_attributes>
       <x>161</x>
       <y>98</y>
       <w>63</w>
-      <h>49</h>
+      <h>48</h>
     </coordinates>
     <panel_attributes>lt=-&lt;&lt; 
          нет</panel_attributes>
@@ -803,8 +803,8 @@ bg=orange</panel_attributes>
     <coordinates>
       <x>175</x>
       <y>133</y>
-      <w>35</w>
-      <h>49</h>
+      <w>34</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>lt=- 
 </panel_attributes>

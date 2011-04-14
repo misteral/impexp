@@ -15,11 +15,12 @@ define ( 'IMAGE_BASE', dirname ( __FILE__ ) . DS.'images' );
 define ( 'TARGET', 'http://sima-land.ru' );
 define ('CATALOG','/catalog.html');
 define ( 'VENDOR','1' ); //вендор сима
-define( '_TRY', 5); //количество попыток закачки
+define( '_TRY', 3); //количество попыток закачки
 
 $o = new output('sima-img-kach');
 $o->echo = false;
-$pars->proxy = '67.205.68.11:8080';
+//$pars->proxy = '67.205.68.11:8080';
+$pars->proxy = '10.44.33.88:8118';
 
 
 // -------------- начинаем обработку-----------------------
@@ -30,26 +31,25 @@ $o->add('-------------------------------------------------------');
 foreach ($rows as $value){
 if ($value->product_status==2){//не обрабатываем если не скачан или обработан
 	$complete = TRUE; // если скачаны не все файлы категории
-	$id = $value->product_id;
+	$id = $value->product_id; //id категории которую качаем
 	$c = 0; //счетчик скачанных файлов в котегории
 	$rows_pr = $db->get_product($id);
-	$o->add('Обработка категории:'.$value->product_name.' ид:'.$value->product_id.'. Количество элементов: '.@mysql_num_rows($rows_pr));
-
-	//if(count($rows_pr==0)){$o->add('Группа вернула нуль элементов (товаров) '.$value->product_name);}
+	$kol_el = @mysql_num_rows($rows_pr);
+	$o->add('Обработка категории:'.$value->product_name.' ид:'.$value->product_id.'. Количество элементов: '.$kol_el);
+	if(!$kol_el){
+		$o->add('Группа вернула нуль элементов (товаров) '.$value->product_name);
+		$complete = false;
+		continue;}
 	while ($row = @mysql_fetch_array($rows_pr)) { //идем по товарам
 		if ($row['product_status'] <> 4 and $row['product_status']<>3){
 		$file = IMAGE_BASE.DS.$row['product_sku'].'.jpg';
 		$url = TARGET.'/images/photo/big/'.$row['product_sku'].'.jpg';
-		while ($res <> 'ok' or $p >_TRY){
-			if (file_exists($file) and filesize($file)){$res = 'ok'; //файл существует
-			}else {
-				$res = $pars->get_img_to_file($url,$file);
-				++$p;
-			}
-			
-			
-			if(!res=='ok'){sleep(1);}
-		}
+		if (file_exists($file) and filesize($file)) {
+			$o->add('Файл существует '.$row['product_sku']);
+			$db->update_status(4, $row['product_id']);
+			continue;
+		} //файл существует
+		$res = $pars->get_url_to_file($url, $file, _TRY);
 		if($res<>'ok'){
 			$o->add('Не могу закачать картинку товара '.$row['product_name'].' арт. :'.$row['product_sku']);
 			$complete=false;
@@ -65,7 +65,7 @@ if ($value->product_status==2){//не обрабатываем если не с�
 	$o->add('Скачано файлов :'.$c);
 	$o->add('----------------------------------------------------');
 	if($complete){$db->update_status(4, $id);}
-	sleep(10);
+	//sleep(10);
 	
 }
 

@@ -1,12 +1,13 @@
 <?php 
 
-//require_once 'ErrorManager.php';
-
 /**
  * Класс для работы с mysql
  * @author BobrovAV
- * @version = 0.0.1
+ * @version = 0.0.2
  **/
+
+require 'phpgdwatermarker.php';
+
 class ex_Mysql {
 	private $count = array(
 		'add'=>0,
@@ -334,7 +335,7 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 	 * @param unknown_type $id  парент
 	 * @return array
 	 */
-	function _get_product($id) {
+	function get_product($id) {
 		$q = 'select * from jos_al_import where product_parent_id ='.$id;
 		$res = $this->query($q);
 		return $res;
@@ -351,6 +352,21 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 		$res = $this->query($q);
 		return @mysql_fetch_array($res);
 	} //_get_product($id)
+
+	
+	
+	/**
+	 * Берем все продукты со статусом 
+	 * @param unknown_type $product_status
+	 * return @mysql_fetch_array($res);
+	 */
+	function get_from_status ($product_status){
+		$q = 'select * from jos_al_import where product_status ='.$product_status;
+		$res = $this->query($q);
+		return @mysql_fetch_array($res);
+	}
+
+	
 	
 	/**
 	 * Берет Id по совпадению $product_name, $product_sku, $product_parent_id
@@ -373,6 +389,86 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
         return $last;	
 	}
 
+
+/** Trims an image then optionally adds padding around it.
+* $im  = Image link resource
+* $bg  = The background color to trim from the image
+* $pad = Amount of padding to add to the trimmed image
+*      (acts simlar to the "padding" CSS property: "top [right [bottom [left]]]")
+*/
+	function imagetrim(&$im, $bg, $pad=null){
+
+    // Calculate padding for each side.
+    if (isset($pad)){
+        $pp = explode(' ', $pad);
+        if (isset($pp[3])){
+            $p = array((int) $pp[0], (int) $pp[1], (int) $pp[2], (int) $pp[3]);
+        }else if (isset($pp[2])){
+            $p = array((int) $pp[0], (int) $pp[1], (int) $pp[2], (int) $pp[1]);
+        }else if (isset($pp[1])){
+            $p = array((int) $pp[0], (int) $pp[1], (int) $pp[0], (int) $pp[1]);
+        }else{
+            $p = array_fill(0, 4, (int) $pp[0]);
+        }
+    }else{
+        $p = array_fill(0, 4, 0);
+    }
+
+    // Get the image width and height.
+    $imw = imagesx($im);
+    $imh = imagesy($im);
+
+    // Set the X variables.
+    $xmin = $imw;
+    $xmax = 0;
+
+    // Start scanning for the edges.
+    for ($iy=0; $iy<$imh; $iy++){
+        $first = true;
+        for ($ix=0; $ix<$imw; $ix++){
+            $ndx = imagecolorat($im, $ix, $iy);
+            if ($ndx != $bg){
+                if ($xmin > $ix){ $xmin = $ix; }
+                if ($xmax < $ix){ $xmax = $ix; }
+                if (!isset($ymin)){ $ymin = $iy; }
+                $ymax = $iy;
+                if ($first){ $ix = $xmax; $first = false; }
+            }
+        }
+    }
+
+    // The new width and height of the image. (not including padding)
+    $imw = 1+$xmax-$xmin; // Image width in pixels
+    $imh = 1+$ymax-$ymin; // Image height in pixels
+
+    // Make another image to place the trimmed version in.
+    $im2 = imagecreatetruecolor($imw+$p[1]+$p[3], $imh+$p[0]+$p[2]);
+
+    // Make the background of the new image the same as the background of the old one.
+    $bg2 = imagecolorallocate($im2, ($bg >> 16) & 0xFF, ($bg >> 8) & 0xFF, $bg & 0xFF);
+    imagefill($im2, 0, 0, $bg2);
+
+    // Copy it over to the new image.
+    imagecopy($im2, $im, $p[3], $p[0], $xmin, $ymin, $imw, $imh);
+
+    // To finish up, we replace the old image which is referenced.
+    $im = $im2;
+}
+
+	function add_logo($target_file,$logo,$overwrite = false) {
+		$watermarker = new PhpGdWatermarker($logo, PhpGdWatermarker::VALIGN_TOP, PhpGdWatermarker::HALIGN_LEFT);
+		$watermarker->setImageOverwrite($overwrite); // [OPTIONAL] Default is TRUE
+		$watermarker->setEdgePadding(3); // [OPTIONAL] Default is 5
+		$watermarker->setWatermarkedImageNamePostfix('_'. time()); // [OPTIONAL] used IFF ImageOverwrite is FALSE, default is '_watermarked'
+		
+		if($watermarker->applyWaterMark($target_file,80)){
+		    return 0;
+		} else {
+		    echo $watermarker->getLastErrorMessage();
+			//$this->errorer($watermarker->getLastErrorMessage());
+		};
+	}
+	
 	/**
 	 * Пишет в class log
 	 * @param unknown_type $txt
@@ -383,6 +479,8 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 	}
 	
 } // class my_sql
+
+
 /**
  * Класс элемента товара в виртуе март
  * @author BobrovAV
@@ -411,6 +509,7 @@ public  $product_ost;
 		
 	}*/
 }  
+
 
 /**
  * Класс закачки через курл и соранения файлов  
@@ -523,7 +622,6 @@ class parse {
 	
 	/**
 	 * Качает в файл из $url количество $try попыток
-	 * если файл существует не качает возвращает 
 	 * this->sleep  - между попытками закачать
 	 * @param string $target_url
 	 * @param string $target_file_name
@@ -570,8 +668,10 @@ class parse {
 	
 	}
 } //parse
+
+
 /**
- * Класс на обработку данных на выход
+  * Класс на обработку данных на выход
  * @author BobrovAV
  * 
  * vendor для заголовка файла
