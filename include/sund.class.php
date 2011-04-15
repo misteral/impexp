@@ -455,6 +455,84 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
     $im = $im2;
 }
 
+   /**
+    * Ресайз изображения
+    * @param unknown_type $src
+    * @param unknown_type $out
+    * @param unknown_type $width
+    * @param unknown_type $height
+    * @param unknown_type $color
+    * @param unknown_type $quality
+    * @return null
+    */
+   function img_resize($src, $out, $width, $height, $color = 0xFFFFFF, $quality = 100) 
+{
+    // Если файл не существует
+    if (!file_exists($src)) {
+        print 'error resize, file not load';  
+    }
+
+    // Получаем массив с информацией о размере и формате картинки (mime)
+    $size = getimagesize($src);
+
+    // Исходя из формата (mime) картинки, узнаем с каким форматом имеем дело
+    $format = strtolower(substr($size['mime'], strpos($size['mime'], '/') + 1));
+    //и какую функцию использовать для ее создания
+    $picfunc = 'imagecreatefrom'.$format;
+
+    // Вычилсить горизонтальное соотношение
+    $gor = $width  / $size[0];
+    // Вертикальное соотношение
+    $ver = $height / $size[1];  
+
+    // Если не задана высота, вычислить изходя из ширины, пропорционально
+    if ($height == 0) {
+        $ver = $gor;
+        $height  = $ver * $size[1];
+    }
+	// Так же если не задана ширина
+	elseif ($width == 0) {
+        $gor = $ver;
+        $width   = $gor * $size[0];
+    }
+
+    // Формируем размер изображения
+    $ratio   = min($gor, $ver);
+    // Нужно ли пропорциональное преобразование
+    if ($gor == $ratio)
+        $use_gor = true;
+    else
+        $use_gor = false;
+
+    $new_width   = $use_gor  ? $width  : floor($size[0] * $ratio);
+    $new_height  = !$use_gor ? $height : floor($size[1] * $ratio);
+    $new_left    = $use_gor  ? 0 : floor(($width - $new_width)   / 2);
+    $new_top     = !$use_gor ? 0 : floor(($height - $new_height) / 2);
+
+    $picsrc  = $picfunc($src);
+    // Создание изображения в памяти
+    $picout = imagecreatetruecolor($width, $height);
+
+    // Заполнение цветом
+    imagefill($picout, 0, 0, $color);
+    // Нанесение старого на новое
+    imagecopyresampled($picout, $picsrc, $new_left, $new_top, 0, 0, $new_width, $new_height, $size[0], $size[1]);
+
+    // Создание файла изображения
+    imagejpeg($picout, $out, $quality);
+
+    // Очистка памяти
+    imagedestroy($picsrc);
+    imagedestroy($picout);
+	
+	$size_img["new_width"] = $new_width;
+	$size_img["new_height"] = $new_height;
+	$size_img["old_width"] = $size[0];
+	$size_img["old_height"] = $size[1];
+
+    return $size_img;
+}
+
 	function add_logo($target_file,$logo,$overwrite = false) {
 		$watermarker = new PhpGdWatermarker($logo, PhpGdWatermarker::VALIGN_TOP, PhpGdWatermarker::HALIGN_LEFT);
 		$watermarker->setImageOverwrite($overwrite); // [OPTIONAL] Default is TRUE
@@ -558,12 +636,41 @@ class parse {
 	
 	}//get_1251_to_UTF
 	
+	/**
+	 * Не использовть
+	 * @param unknown_type $target_url
+	 * @param unknown_type $target_file
+	 * @param unknown_type $day
+	 * @return string
+	 */
+	function get_1251_to_UTF_chk_day($target_url,$target_file,$day){
 	
+	$p=0;
+	while (!$res and $p < $this->try){
+		$userAgent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.0.8) Gecko/2009032609 Firefox/3.0.8';
+		// make the cURL request to $target_url
+	    if (!$ch = curl_init()){return 'error :Не инициализирован CURL';}
+		curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
+		curl_setopt($ch, CURLOPT_URL, $target_url);
+		curl_setopt($ch, CURLOPT_FAILONERROR, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_REFERER, '');
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+	    if($this->proxy) {curl_setopt($ch, CURLOPT_PROXY, trim($this->proxy));} 
+            //curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL,TRUE);
+            //curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
+		$res = curl_exec($ch);
+		if (!$res){sleep($this->sleep);++$p;} //не скачался пауза в слееп
+		else {++$this->count;}
+	} //while 
+	if (!$res){return 'error '.curl_error($ch);}
+	!$res= mb_convert_encoding($res,'UTF8', "CP1251");
+	$res = $this->save($target_file, $res);
+	curl_close($ch);
+	return 'ok';
 	
-	
-	
-	
-	
+	}//get_1251_to_UTF
 	
 	
 	/**
