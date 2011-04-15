@@ -20,6 +20,9 @@ define ('CATALOG','/catalog.html');
 define ( 'VENDOR','1' ); //вендор сима
 define( '_TRY', 3); //количество попыток закачки
 define('DIF_DATE', '3');
+define( 'WGET', 'wget.sima-catalog' );
+$wget = TRUE;
+if (file_exists(WGET)){unlink(WGET);}
 
 //$pars->proxy = '67.205.68.11:8080';
 $pars->proxy = '10.44.33.88:8118';
@@ -31,7 +34,6 @@ $file = CPATH_BASE.DS."catalog.html";
 if (file_exists($file) and filesize($file)){$creation_date = date ("d.m.y", filemtime($file));}//else{$creation_date = 0;}
 $today = date("d.m.y"); 
 $diff = $today - $creation_date;
-
 if ($diff>DIF_DATE){ //разница в днях есть качать 
 	$res = $pars->get_1251_to_UTF($url, $file, _TRY);
 	if ($res <> 'ok'){
@@ -129,11 +131,15 @@ foreach ($rows as $value){
 		$arr = explode('/', $url);
 		$arr[4] = 500;
 		$url = implode('/', $arr);
-		$o->add('Качаем категорию '.$value->product_name.' с адреса '.TARGET.$url);
+		if (!$wget){$o->add('Качаем категорию '.$value->product_name.' с адреса '.TARGET.$url);}
 		$p=1;
 		unset($res);
 		$url = TARGET.$url;
 		$file = CPATH_BASE.DS.$sku.'_'.$dop.'.html';
+		//если есть отправка на wget ничего не качаем
+		if ($wget){file_put_contents(WGET, $url."\r\n", FILE_TEXT|FILE_APPEND); $db->update_status(1, $value->product_id); continue;}
+		
+	
 		if (file_exists($file) and filesize($file)){$creation_date = date ("d.m.y", filemtime($file));}//else{$creation_date = 0;}
 			$today = date("d.m.y");
 			$diff = $today - $creation_date; 
@@ -152,7 +158,7 @@ foreach ($rows as $value){
 	}else{ //не качаем если статус 3
 		$o->add('Пропускаем группу '.$value->product_name);	
 	}
-	
+		
 }		
 	
 	//echo ($out->txt());

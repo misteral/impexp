@@ -16,6 +16,9 @@ define ( 'TARGET', 'http://sima-land.ru' );
 define ('CATALOG','/catalog.html');
 define ( 'VENDOR','1' ); //вендор сима
 define( '_TRY', 3); //количество попыток закачки
+define( 'WGET', 'wget.sima-images' );
+$wget = TRUE;
+if (file_exists(WGET)){unlink(WGET);}
 
 $o = new output('sima-img-kach');
 $o->echo = false;
@@ -49,7 +52,13 @@ if ($value->product_status==2){//не обрабатываем если не с�
 			$db->update_status(4, $row['product_id']);
 			continue;
 		} //файл существует
+		if ($wget){
+		file_put_contents(WGET, $url."\r\n", FILE_TEXT|FILE_APPEND);
+//		$complete=false;
+		continue;
+		}
 		$res = $pars->get_url_to_file($url, $file, _TRY);
+		
 		if($res<>'ok'){
 			$o->add('Не могу закачать картинку товара '.$row['product_name'].' арт. :'.$row['product_sku']);
 			$complete=false;
