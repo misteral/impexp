@@ -15,7 +15,7 @@ error_reporting ( E_ALL );
 define ( '_JEXEC', 1 );
 define ( 'DS', DIRECTORY_SEPARATOR );
 # директория в которой расположен движок /joomla/ ,если в корне сайта то пусто
-define ( 'JPATH_BASE', dirname(dirname ( __FILE__ )) . '' );
+define ( 'JPATH_BASE', dirname(dirname(dirname ( __FILE__ ))) . '' );
 # директория в которую записываются картинки и файл обмена
 define ( 'JPATH_BASE_PICTURE', JPATH_BASE .DS.'components'.DS.'com_virtuemart'.DS.'shop_image'.DS.'product');
 # директория в которую записываются маленькие картинки
@@ -23,7 +23,7 @@ define ( 'JPATH_BASE_PICTURE_SMALL', JPATH_BASE_PICTURE .DS.'resized' );
 
 require_once (JPATH_BASE . DS . 'includes' . DS . 'defines.php');
 require_once (JPATH_BASE . DS . 'includes' . DS . 'framework.php');
-require ('joomla' .DS. 'libraries' .DS. 'joomla' .DS. 'factory.php');
+require (JPATH_BASE .DS. 'libraries' .DS. 'joomla' .DS. 'factory.php');
 // initialize the application
 $mainframe = & JFactory::getApplication ( 'site' );
 $mainframe->initialise ();
@@ -35,23 +35,24 @@ $log = &JLog::getInstance ( 'connectVM.log' );
 //$session->set('fl_commerceml', $array);
 //$session->get('fl_commerceml');
 //  категории товара
-$category = array ();
 
-$tax_rate = array ();
+//$category = array ();
+
+//$tax_rate = array ();
 # товар
-$products = array ();
+//$products = array ();
 # типы цен
-$price = array ();
+//$price = array ();
 # цены на товар
-$price_tovar = array ();
+//$price_tovar = array ();
 
 # характеристики на товар
-$char_type_name = array ();
+//$char_type_name = array ();
 # производитель
-$manufacturer_1C_ID = '';
-$manufacturer = array ();
+//$manufacturer_1C_ID = '';
+//$manufacturer = array ();
 #ID продавца, имя продавца берем из CML
-$vendor_1C_ID = 0;
+//$vendor_1C_ID = 0;
 #ID группы производителей ищется по имени продавца берем из CML
 $mf_category_id = 0;
 
@@ -280,27 +281,31 @@ function Write_product_attribute_sku()
 
 
 
-# Ищем группу производителей привязанных к продавцу если не находим то записываем новую группу
-# Ищем продавца если не находим то записываем нового
-function vendor_create($xml)
+ 
+/**
+ *Ищем продавца если не находим то записываем нового
+ *Ищем группу производителей привязанных к продавцу если не находим то записываем новую группу
+ *$vendor txt
+ */
+function vendor_create($vendor)
 {
 	global $db;
 	global $log;
 
 	global $mf_category_id;
-	$vendor_name	=	(string)$xml->Владелец->Наименование;
-	$vendor_store_name	=	(string)$xml->Владелец->ОфициальноеНаименование;
+	$vendor_name	=	$vendor;
+	$vendor_store_name	=	$vendor;
 
 	$db->setQuery ( "SELECT mf_category_id FROM #__vm_manufacturer_category where mf_category_name = '" . $vendor_name . "'" );
 	$rows_sub_Count = $db->loadResult ();
 	if (isset ( $rows_sub_Count )) {
-		$mf_category_id	= (int)$rows_sub_Count;
+		return $mf_category_id	= (int)$rows_sub_Count;
 	} else // Если группа поизводителей по имени не найдена в базе то мы ее создаем
 	{
-		$mf_category_id	=	manufacturer_category_create($vendor_name,$vendor_store_name);
+		return $mf_category_id	=	manufacturer_category_create($vendor_name,$vendor_store_name);
 	}
 
-	################################################################################
+/*	################################################################################
 	$db->setQuery ( "SELECT vendor_id FROM #__vm_vendor where vendor_name = '" . $vendor_name . "'" );
 	$rows_sub_Count = $db->loadResult ();
 
@@ -319,7 +324,7 @@ function vendor_create($xml)
 			return false;
 		}
 		return $ins->vendor_id;
-	}
+	}*/
 }
 
 # Создание новой ссылки товара на группу
@@ -547,8 +552,50 @@ function products_character($xml,$id,$ownerid) {
 	}
 
 }
-# Парсинг списка товаров и характеристик
 
+
+/**
+ *Берет ид из vm по наименованиею и артикулу
+ *$product_name
+ *$product_sku
+ */
+function vm_get_id($product_name,$product_sku) {
+	global $db;	
+	$q = "SELECT product_id FROM #__vm_product where product_name = '" . $product_name . "' and product_sku = '". $product_sku."'";
+	$db->setQuery ($q);
+	$rows_sub_Count = $db->loadResult ();
+	if (isset ( $rows_sub_Count )) {
+	return $rows_sub_Count;
+	}
+	return 0;
+}
+
+/**
+ * Устанавливает publish на продукт $product_id
+ */
+function vm_set_publish($product_id) {
+	global $db;
+	$q = "update #__vm_product set product_publish = 'Y' where product_id = '".$product_id."'";
+	$db->setQuery ($q);
+	$db->query ();
+}
+
+/**
+ *Ставит нот паблиш если нет в обновках 
+ */
+function vm_product_notpublish_if_not_updated($manufacturer){
+	global $db;
+	$db->setQuery ( "update #__vm_product,#__vm_product_mf_xref
+	set #__vm_product.product_publish = 'N'
+	where
+	#__vm_product_mf_xref.manufacturer_id = ".$manufacturer."
+	and #__vm_product_mf_xref.manufacturer_id = #__vm_product.product_id
+	and #__vm_product.product_sku not in (select product_sku from #__al_import where product_vendor = ".$manufacturer.")");
+	$db->query ();
+}
+
+
+# Парсинг списка товаров и характеристик
 function products_create($xml, $products) {
 
 	global $category;
@@ -733,6 +780,7 @@ function products_create($xml, $products) {
 //products_per_row
 //category_flypage
 //list_order
+
 
 
 # Создание новой категории
@@ -1030,7 +1078,7 @@ function createzakaz() {
 
 }
 
-/
+
 function CheckAuthUser()
 {
 	global $db;
