@@ -251,6 +251,7 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 	}
 	
 
+
 	
 	/**
 	 * Обновляет статус продукта и ставит дату в product_date_add 
@@ -328,14 +329,46 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 		mysql_free_result($res);
 	}
 
+	/**
+	 * Не дописана
+	 * @param unknown_type $cat_name
+	 * @param unknown_type $product_margin
+	 * @param unknown_type $vendor
+	 */
+	function change_margin ($cat_name,$product_margin,$vendor){
+
+		$q="select product_id from jos_al_import where product_name like '".$cat_name."' and product_parent_id = 0 and product_vendor =".$vendor;
+		$res = $this->query($q);
+		while  ($row = mysql_fetch_array($res)) { // идем по главным группам
+			$q = "select product_id from jos_al_import where product_parent_id =".$row[product_id] ;
+			$res2 = $this->query($q);
+			while  ($row2 = mysql_fetch_array($res2)) {// идем по подчиненным группа
+				$q = "select product_id from jos_al_import where product_parent_id =".$row2[product_id] ;
+				$res3 = $this->query($q);
+				while  ($row3 = mysql_fetch_array($res3)) { // идем по товрарм
+						$this->update_status($status, $row3[product_id]);
+				}
+				mysql_free_result($res3);
+				$this->update_status($status, $row2[product_id]);
+				}
+			$this->update_status($status, $row[product_id]);
+			mysql_free_result($res2);
+			}
+		mysql_free_result($res);
+		
+	}
+	
+	function update_margin($product_id){
+		$q = "";
+	}
 	
 	/**
 	 * Берет продукты из категории
-	 * мертвая функция
+	 * 
 	 * @param unknown_type $id  парент
 	 * @return array
 	 */
-	function get_product($id) {
+	function get_product_from_parent($id) {
 		$q = 'select * from jos_al_import where product_parent_id ='.$id;
 		$res = $this->query($q);
 		return $res;
@@ -363,7 +396,9 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 	function get_from_status ($product_status){
 		$q = 'select * from jos_al_import where product_status ='.$product_status;
 		$res = $this->query($q);
-		return @mysql_fetch_array($res);
+		if ($res){return $res;}
+		return 0;
+		
 	}
 
 	
@@ -537,7 +572,7 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 		$watermarker = new PhpGdWatermarker($logo, PhpGdWatermarker::VALIGN_TOP, PhpGdWatermarker::HALIGN_LEFT);
 		$watermarker->setImageOverwrite($overwrite); // [OPTIONAL] Default is TRUE
 		$watermarker->setEdgePadding(3); // [OPTIONAL] Default is 5
-		$watermarker->setWatermarkedImageNamePostfix('_'. time()); // [OPTIONAL] used IFF ImageOverwrite is FALSE, default is '_watermarked'
+		$watermarker->setWatermarkedImageNamePostfix('_logo'); // [OPTIONAL] used IFF ImageOverwrite is FALSE, default is '_watermarked'
 		
 		if($watermarker->applyWaterMark($target_file,80)){
 		    return 0;

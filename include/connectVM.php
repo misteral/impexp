@@ -49,7 +49,7 @@ $log = &JLog::getInstance ( 'connectVM.log' );
 # характеристики на товар
 //$char_type_name = array ();
 # производитель
-//$manufacturer_1C_ID = '';
+$manufacturer_ID = '';
 //$manufacturer = array ();
 #ID продавца, имя продавца берем из CML
 //$vendor_1C_ID = 0;
@@ -342,15 +342,19 @@ function newProducts_xref($category_id, $product_id) {
 	}
 
 }
-# Создание нового товара
-function newProducts($product_parent_id,$product_SKU, $product_name, $product_desc, $product_full_image, $product_ed) {
+
+/**
+ *Создание нового товара
+ *  $product_parent_id,$product_SKU, $product_name, $product_desc, $product_full_image, $product_thumb_image, $product_ed
+ */
+function newProducts($product_parent_id,$product_SKU, $product_name, $product_desc, $product_full_image, $product_thumb_image, $product_ed) {
 	global $db;
 
-	global $vendor_1C_ID;
+	//global $vendor_1C_ID;
 
 	$ins = new stdClass ();
 	$ins->product_id = NULL;
-	$ins->vendor_id 	=	$vendor_1C_ID;
+	$ins->vendor_id 	=	1;
 	$ins->product_parent_id	=	$product_parent_id;
 	$ins->product_SKU = $product_SKU;
 	$ins->product_name = $product_name;
@@ -362,7 +366,7 @@ function newProducts($product_parent_id,$product_SKU, $product_name, $product_de
 	$ins->mdate = time ();
 
 	$ins->product_full_image = $product_full_image;
-	$ins->product_thumb_image = $product_full_image;
+	$ins->product_thumb_image = $product_thumb_image;
 
 	if (! isset ( $product_ed )) {
 		$ins->product_unit = 'piece';
@@ -555,7 +559,7 @@ function products_character($xml,$id,$ownerid) {
 
 
 /**
- *Берет ид из vm по наименованиею и артикулу
+ *Берет ид из vm_product по наименованиею и артикулу
  *$product_name
  *$product_sku
  */
@@ -570,6 +574,30 @@ function vm_get_id($product_name,$product_sku) {
 	return 0;
 }
 
+
+
+/**
+ *Берет ид из vm_category по наименованиею
+ *$product_name
+ *$product_parent_id
+ */
+function vm_get_category_id($category_name,$parent_id) {
+	global $db;	
+	$q ="SELECT a.category_id FROM jos_vm_category a,jos_vm_category_xref b  
+	where 
+	b.category_parent_id = ".$parent_id."
+	and b.category_child_id = a.category_id
+	and a.category_name = '" . $category_name . "'";
+
+	$db->setQuery ($q);
+	$rows_sub_Count = $db->loadResult ();
+	if (isset ( $rows_sub_Count )) {
+	return $rows_sub_Count;
+	}
+	return 0;
+}
+
+
 /**
  * Устанавливает publish на продукт $product_id
  */
@@ -580,239 +608,29 @@ function vm_set_publish($product_id) {
 	$db->query ();
 }
 
+
+
 /**
  *Ставит нот паблиш если нет в обновках 
  */
-function vm_product_notpublish_if_not_updated($manufacturer){
+function vm_product_notpublish_if_not_updated(){
 	global $db;
-	$db->setQuery ( "update #__vm_product,#__vm_product_mf_xref
+	global $manufacturer_ID;
+	
+	$q = "update #__vm_product,#__vm_product_mf_xref
 	set #__vm_product.product_publish = 'N'
 	where
-	#__vm_product_mf_xref.manufacturer_id = ".$manufacturer."
+	#__vm_product_mf_xref.manufacturer_id = ".$manufacturer_ID."
 	and #__vm_product_mf_xref.manufacturer_id = #__vm_product.product_id
-	and #__vm_product.product_sku not in (select product_sku from #__al_import where product_vendor = ".$manufacturer.")");
+	and #__vm_product.product_sku not in (select product_sku from #__al_import where product_vendor = ".$manufacturer_ID.")";
+	$db->setQuery ($q);
 	$db->query ();
+	
+	
+	
 }
 
 
-# Парсинг списка товаров и характеристик
-function products_create($xml, $products) {
-
-	global $category;
-	global $char;
-	global $manufacturer;
-	global $manufacturer_1C_ID;
-	global $char_type_name;
-
-	global $db;
-	global $log;
-
-	if (!isset($xml->Товары))
-
-	{
-		return $products;
-	}
-	$i=0;
-	foreach ($xml->Товары->Товар as $product_data)
-
-	{
-
-		$i++;
-		$owner = substr((string)$product_data->Ид,0,36);
-		$owner2 = (string)$product_data->Ид;
-		# Если товар уже был загружен в массив
-		if (isset ( $products [$owner] )) {
-
-			$log->addEntry ( array ('comment' => 'product characters add '));
-
-			# Добавим товар на характеристику
-			$products [$owner2] ['product_id'] = newProducts ($products [$owner] ['product_id'],$products [$owner] ['Артикул'].':e'.$i ,$products [$owner] ['Наименование'],  $products [$owner] ['Реквизиты'] ['Полное наименование'], $products [$owner] ['picture'], $products [$owner] ['product_ed'] );
-
-			$db->setQuery ( "REPLACE INTO  #__vm_product_mf_xref
-					(product_id, manufacturer_id)
-					VALUES (" . $products [$owner2] ['product_id'] . "," . $products [$owner] ['manufacturer'] . ")");
-			$db->query ();
-
-
-			# Связываем товар и группу
-			newProducts_xref ( $products [$owner] ['Группа'], $products [$owner2] ['product_id'] );
-
-			# Характеристики товара
-			if (isset($product_data->ХарактеристикиТовара))
-			{
-				$log->addEntry ( array ('comment' => 'products_char_create  owner2 ' . $products [$owner2] ['product_id'] . ' owner ' . $products [$owner] ['product_id'] ));
-				products_character($product_data,$products [$owner2] ['product_id'],$products [$owner] ['product_id']);
-			}
-
-
-		} # новый товар в массиве
-		else
-		{
-			$products[$owner]['Наименование'] 	=(string)$product_data->Наименование;
-			$products[$owner]['Артикул'] 		=(string)$product_data->Артикул;
-			$products[$owner]['Группа'] 		= 0;
-
-			foreach ($product_data->Группы as $groups_data)
-			{
-				$id	=	(string)$groups_data->Ид;
-				$products [$owner] ['Группа'] = $category [$id] ['category_id'];
-			}
-			$products[$owner]['product_ed']=(string)$product_data->БазоваяЕдиница;
-
-			# Реквизиты товара
-			foreach ($product_data->ЗначенияРеквизитов->ЗначениеРеквизита as $recvizit_data)
-			{
-				$products [$owner] ['Реквизиты'] ["$recvizit_data->Наименование"] = "$recvizit_data->Значение";
-			}
-
-
-			# Свойства товара (поиск производителя)
-			$products [$owner] ['manufacturer'] = 0;
-			if (isset($product_data->ЗначенияСвойств))
-
-			{
-				foreach ($product_data->ЗначенияСвойств->ЗначенияСвойства as $sv_data)
-
-				{
-					# перебираем свойства ищем производителя
-					if ($sv_data->Ид	=	$manufacturer_1C_ID)
-					{
-
-						# Если в производителях находим по имении производителя из 1С
-						if (isset($manufacturer[(string)$sv_data->Значение]))
-						{
-
-							#$log->addEntry ( array ('comment' => 'manafactured = ' . $manufacturer[(string)$sv_data->Значение] ) );
-							$products[$owner]['manufacturer']	=	$manufacturer[(string)$sv_data->Значение];
-						}
-						else
-						{
-							$products[$owner]['manufacturer']	=	manufacturer_create((string)$sv_data->Значение);
-							#$log->addEntry ( array ('comment' => 'manafactured add new = ' . $products[$owner]['manufacturer'] ) );
-							# Дополним таблицу производителей новым элементом
-							$manufacturer[(string)$sv_data->Значение]=$products [$owner] ['manufacturer'];
-						}
-					}
-				}
-			}
-			if (isset($product_data->СтавкиНалогов))
-			{
-				foreach ($product_data->СтавкиНалогов->СтавкаНалога as $snalog)
-				{
-					$products [$owner] ['СтавкаНалога'] ["$snalog->Наименование"] = "$snalog->Ставка";
-				}
-			}
-
-
-			$products[$owner]['picture']	=	(string)$product_data->Картинка;
-
-			$db->setQuery ( "SELECT product_id FROM #__vm_product where product_sku = '" . $products [$owner] ['Артикул'] . "'" );
-			$rows_sub_Count = $db->loadResult ();
-
-			# Если товар  по артикулу есть в базе то мы не меняем id товара , а берем его id
-			if (isset ( $rows_sub_Count )) {
-
-				$products [$owner] ['product_id'] = ( int ) $rows_sub_Count;
-				# Очистим всех родственников и их цены
-				$db->setQuery ("DELETE  t1 ,t2 from #__vm_product t1 inner join #__vm_product_price t2 Where t2.product_id = t1.product_parent_id AND t1.product_parent_id =" . $products [$owner] ['product_id']);
-				$db->query ();
-
-				# пытаемся сделать update всех поле полей
-				$query = "UPDATE #__vm_product SET " .
-				",product_s_desc='" . $products [$owner] ['Реквизиты'] ['Полное наименование'] . "'" .
-				",product_name=" . $products [$owner] ['Наименование'] .
-				",product_full_image='" . $products [$owner] ['picture'] .
-				",product_thumb_image='" . $products [$owner] ['picture'] .
-				" where product_sku = '" . $products [$owner] ['Артикул'] . "'";
-				$db->setQuery ( $query );
-				$db->query ();
-
-				# Связываем товар и группу
-				$query = "UPDATE #__vm_category_xref SET " . ",category_id=" . $products [$owner] ['Группа'] . " where product_id = " . $products [$owner] ['product_id'] ;
-				$db->setQuery ( $query );
-				$db->query ();
-			} else // Если товар  по артикулу  не найден в  базе то мы ее создаем
-			{
-				$products [$owner] ['product_id'] = newProducts (0, $products [$owner] ['Артикул'], $products [$owner] ['Наименование'], $products [$owner] ['Реквизиты'] ['Полное наименование'], $products [$owner] ['picture'], $products [$owner] ['product_ed'] );
-				# Создадим/Изменим производителя
-				$log->addEntry ( array ('comment' => 'products_create ' . $products [$owner] ['product_id'] . "" . $products [$owner] ['Наименование'] . ";" . $products [$owner] ['Группа'] . ";" ) );
-				# Связываем товар и группу
-				newProducts_xref ( $products [$owner] ['Группа'], $products [$owner] ['product_id'] );
-			}
-
-
-			#$log->addEntry ( array ('comment' => 'REPLACE __vm_product_mf_xref' . $products [$owner] ['product_id'] . "," . $products [$owner] ['manufacturer']  ) );
-
-			# Создадим/Изменим производителя
-			$db->setQuery ( "REPLACE INTO  #__vm_product_mf_xref
-					(product_id, manufacturer_id)
-					VALUES (" . $products [$owner] ['product_id'] . "," . $products [$owner] ['manufacturer'] . ")");
-			$db->query ();
-
-			# Характеристики товара
-			if (isset($product_data->ХарактеристикиТовара))
-			{
-				# Добавим товар на характеристику
-				$products [$owner2] ['product_id'] = newProducts ($products [$owner] ['product_id'], $products [$owner] ['Артикул'].':e'.$i, $products [$owner] ['Наименование'], $products [$owner] ['Реквизиты'] ['Полное наименование'], $products [$owner] ['picture'], $products [$owner] ['product_ed'] );
-				# Характеристики товара
-				$log->addEntry ( array ('comment' => 'products_char_create  owner2 ' . $products [$owner2] ['product_id'] . ' owner ' . $products [$owner] ['product_id'] ));
-				products_character($product_data,$products [$owner2] ['product_id'],$products [$owner] ['product_id']);
-				$db->setQuery ( "REPLACE INTO  #__vm_product_mf_xref
-					(product_id, manufacturer_id)
-					VALUES (" . $products [$owner2] ['product_id'] . "," . $products [$owner] ['manufacturer'] . ")");
-				$db->query ();
-			}
-		}
-	}
-	return $products;
-}
-
-//category_id
-//manufacturer_id
-//category_name
-//category_description
-//category_thumb_image
-//category_full_image
-//category_publish
-//cdate
-//mdate
-//category_browsepage
-//products_per_row
-//category_flypage
-//list_order
-
-
-
-# Создание новой категории
-function newCategory($category_name, $category_description = '') {
-
-	global $vendor_1C_ID;
-
-	global $db;
-
-
-	$ins = new stdClass ();
-	$ins->category_id = NULL;
-	$ins->category_name = $category_name;
-	$ins->category_description = $category_description;
-	$ins->vendor_id = $vendor_1C_ID;
-	$ins->category_publish = 'Y';
-	$ins->category_browsepage = 'managed';
-	$ins->cdate = time ();
-	$ins->mdate = time ();
-	$ins->category_flypage = 'flypage.tpl';
-	$ins->category_thumb_image = '';
-	$ins->category_full_image = '';
-	$ins->list_order = 1;
-
-	if (! $db->insertObject ( '#__vm_category', $ins, 'category_id' )) {
-		return false;
-	}
-
-	return $ins->category_id;
-}
-
-//jos_vm_category_xref
 //category_parent_id
 //category_child_id
 //category_list
@@ -910,33 +728,30 @@ function newShopperGroupCreate($name) {
 	return $ins->shopper_group_id;
 }
 
-# заполнение цен товара и кол-ва
-function newProduct_price($price_tovar) {
+
+/**
+ *заполнение цены товара
+ */
+function vm_newProduct_price($product_id,$price_tovar) {
 
 	global $db;
 	global $log;
 
-	foreach ( $price_tovar as $price_tovar_data ) {
-		$val = $price_tovar_data ['Валюта'];
-		switch ($price_tovar_data ['Валюта']) {
-			case 'руб' :
-				$val = 'RUB';
-				break;
-			case 'RUB' :
-				$val = 'руб';
-				break;
-		}
-
-		$db->setQuery ( "REPLACE INTO  #__vm_product_price
+	$val = 'RUB';
+	$shopper_group_id = '8';
+	$q = 'delete from #__vm_product_price where product_id = '.$product_id;
+	$db->setQuery ($q );
+	$db->query ();
+	$db->setQuery ( "REPLACE INTO  #__vm_product_price
 				(product_id, product_price, product_currency, 
 				product_price_vdate, product_price_edate,cdate,
 				mdate,shopper_group_id,price_quantity_start,
 				price_quantity_end ) 
-				VALUES (" . $price_tovar_data ['product_id'] . 
-				',' . $price_tovar_data ['ЦенаЗаЕдиницу'] . ',' .
+				VALUES (" . $product_id . 
+				',' . $price_tovar . ',' .
 				"'" . $val . "'" . ',' . '0,0,' . time () .
 				',' . time () . ',' .
-				$price_tovar_data ['shopper_group_id'] . ',' . '0,0)' );
+				$shopper_group_id . ',' . '0,0)' );
 
 				if (! $result = $db->query ()) {
 					echo $db->stderr ();
@@ -944,14 +759,16 @@ function newProduct_price($price_tovar) {
 				}
 
 				# Изменим запасы товара на складе
-				$log->addEntry ( array ('comment' => 'change qnty ' .  $price_tovar_data ['product_id'] . " =".$price_tovar_data ['Количество']) );
+/*				$log->addEntry ( array ('comment' => 'change qnty ' .  $price_tovar_data ['product_id'] . " =".$price_tovar_data ['Количество']) );
 				$query = "UPDATE #__vm_product SET product_in_stock=" . $price_tovar_data ['Количество'] .
 				" where product_id=" . $price_tovar_data ['product_id'];
 				$db->setQuery ( $query );
-				$db->query ();
+				$db->query ();*/
 
-	}
+	
 }
+
+
 # выгрузка заказов из VirtueMart
 function createzakaz() {
 
