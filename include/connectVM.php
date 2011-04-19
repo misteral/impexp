@@ -344,7 +344,7 @@ function newCategory($category_name, $category_description = '') {
 	$ins->category_id = NULL;
 	$ins->category_name = $category_name;
 	$ins->category_description = $category_description;
-	$ins->vendor_id = $vendor_1C_ID;
+	$ins->vendor_id = $vendor_ID;
 	$ins->category_publish = 'Y';
 	$ins->category_browsepage = 'browse_3';
 	$ins->cdate = time ();
@@ -456,6 +456,8 @@ function manufacturer_category_create($name,$desc='') {
 	}
 	return $ins->mf_category_id;
 }
+
+
 # Создание нового производителя с привязкой к группе продавца
 function manufacturer_create($name) {
 

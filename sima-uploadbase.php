@@ -20,12 +20,33 @@ $rows = $db_my->parent_gr();
 while ($row =  mysql_fetch_array($rows)){
 	if ($row['product_status']<> 3 ){
 		$pcat_id =vm_get_category_id($row['product_name'], 0);
-		if ($pcat_id){
+		if (!$pcat_id){ //создадим новую
 			$pcat_id=newCategory($row['product_name']);
 			newGroups_xref(0,$pcat_id);
-		}
+		}//создадим новую
+		
+		$db_my->update_status('5', $pcat_id);
 	}
 }
+unset($rows);
+unset($row);
+unset($pcat_id);
+//************** Занесем дочерние группы************************
+
+$rows = $db_my->child_gr2();
+while ($row =  mysql_fetch_array($rows)){
+	if ($row['product_status']<> 3 ){
+		$parent_name = $db_my->get_from_id($row['product_parent_id']);
+		$parent_id = vm_get_category_id($parent_name['product_name'], 0);
+		$pcat_id =vm_get_category_id_name($row['product_name'], $parent_name['product_name']);
+		if (!$pcat_id){//создадим новую
+			$pcat_id=newCategory($row['product_name'],'');
+			newGroups_xref($parent_id,$pcat_id);
+		}//создадим новую
+		$db_my->update_status('5', $pcat_id);
+	}
+}
+
 
 //******************* обработка товаров***************************
 $rows = $db_my->get_from_status('4');
@@ -41,39 +62,35 @@ while ($row =  mysql_fetch_array($rows)){
 		}//есть такой товар
 		else {//нет такого товара 
 			$product_full_image =$manufacturer_ID.'_'.'500_'.$row['product_sku'].'.jpg';
-			$product_thumb_image = 	'resized'.DS.$manufacturer_ID.'_'.'90_'.$row['product_sku'].'.jpg';
+			$product_thumb_image =mysql_escape_string('resized'.DS.$manufacturer_ID.'_'.'90_'.$row['product_sku'].'.jpg');
 			$product_id=newProducts(0,$row['product_sku'], $row['product_name'], $row['product_desc'], $product_full_image, $product_thumb_image, $row['product_ed']);
-			
-			vm_newProduct_price($product_id,$product_price); //установим цену	
+			$product_price = round ($row['product_price']*$row['product_margin']);
+			vm_newProduct_price($product_id,$product_price); //установим цену
+
 		}  //нет такого товара 
+		
+		$parent_name = $db_my->get_from_id($row['product_parent_id']);
+		$ppname = $db_my->get_from_id($parent_name['product_parent_id']);
+		if(!$ppname){
+			$category_id = vm_get_category_id($parent_name['product_name'], 0);
+		}else {
+			$category_id = vm_get_category_id_name($parent_name['product_name'], $ppname['product_name']);
+		}
+		newProducts_xref($category_id,$product_id);
 		$db_my->update_status('5', $row['product_id']);
 		
 		// **** обработка его групп****
 		//$pp_id  = $row['product_parent_id'];
-		$pare = $db_my->get_from_id($row['product_parent_id']);
-		$product_flag = true;
-		$ppare_id = $pare['product_parent_id'];
-		$ppare_name = $db_my->get_from_id($ppare_id);
-		$ppare_name = $ppare_name['product_name'];
-		while ($ppare_id) {//обработка групп пока не найдем головную
-			$cat_id = vm_get_category_id_name($pare['product_name'], $ppare_name);
-			if (!$cat_id){//нет такой категории cоздадим
-				$cat_id = newCategory($pare['product_name']);
-			}
-			if ($product_flag){ //продукт
-				newProducts_xref($cat_id,$product_id);
-				$product_flag = false;
-			}else{
-				
-				
-				newGroups_xref($row['product_parent_id']);
-			}//else //продукт
-		}//обработка групп пока не найдем головную
-		
-		
-		
-		
-	} //это группа
 
-}
+			
+		
+		}//это группа
+}		
+
+
+
+		
+
+
+
 ?>
