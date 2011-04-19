@@ -51,8 +51,8 @@ $log = &JLog::getInstance ( 'connectVM.log' );
 # производитель
 $manufacturer_ID = '';
 //$manufacturer = array ();
-#ID продавца, имя продавца берем из CML
-//$vendor_1C_ID = 0;
+#ID продавца, имя продавца, мое ID
+$vendor_ID = 1;
 #ID группы производителей ищется по имени продавца берем из CML
 $mf_category_id = 0;
 
@@ -327,6 +327,42 @@ function vendor_create($vendor)
 	}*/
 }
 
+/**
+ * Создание новой категории
+ * @param $category_name
+ * @param ;category_description
+ * @return boolean
+ */
+function newCategory($category_name, $category_description = '') {
+
+	global $vendor_ID;
+
+	global $db;
+
+
+	$ins = new stdClass ();
+	$ins->category_id = NULL;
+	$ins->category_name = $category_name;
+	$ins->category_description = $category_description;
+	$ins->vendor_id = $vendor_1C_ID;
+	$ins->category_publish = 'Y';
+	$ins->category_browsepage = 'browse_3';
+	$ins->cdate = time ();
+	$ins->mdate = time ();
+	$ins->category_flypage = 'flypage.tpl';
+	$ins->category_thumb_image = '';
+	$ins->category_full_image = '';
+	$ins->list_order = 1;
+
+	if (! $db->insertObject ( '#__vm_category', $ins, 'category_id' )) {
+		return false;
+	}
+
+	return $ins->category_id;
+}
+
+
+
 # Создание новой ссылки товара на группу
 function newProducts_xref($category_id, $product_id) {
 
@@ -342,6 +378,25 @@ function newProducts_xref($category_id, $product_id) {
 	}
 
 }
+
+/**
+ * Добавляет соответствте категория категория
+ * @param  $parent_id
+ * @param  $category_id
+ * @return boolean
+ */
+function newGroups_xref( $parent_id, $category_id ) {
+	global $db;
+
+		$ins = new stdClass ();
+		$ins->category_parent_id = $parent_id;
+		$ins->category_child_id = $category_id;
+		$ins->category_list = null;
+
+		if (! $db->insertObject ( '#__vm_category_xref', $ins )) {
+			return false;
+		}	
+} //newGroups_xref
 
 /**
  *Создание нового товара
@@ -383,91 +438,9 @@ function newProducts($product_parent_id,$product_SKU, $product_name, $product_de
 	return $ins->product_id;
 }
 # Парсинг типов цен
-function price_create($xml, $price) {
 
-	#global $category;
-	//		global $products;
-	global $db;
-
-	if (!isset($xml->ТипыЦен))
-
-	{
-		return $price;
-	}
-	# Прочтем все типы цен из offers.xml
-	foreach ($xml->ТипыЦен->ТипЦены as $price_data)
-
-	{
-		$owner								=(string)$price_data->Ид;
-		$price[$owner]['Наименование'] 		=(string)$price_data->Наименование;
-		$price[$owner]['Валюта'] 			=(string)$price_data->Валюта;
-
-
-
-		if (FIX_TYPEPRICE <> '-default-') {
-			if ($price [$owner] ['Наименование'] == FIX_TYPEPRICE) {
-				$price [$owner] ['Наименование'] = '-default-';
-			}
-		}
-
-		$db->setQuery ( "SELECT shopper_group_id FROM #__vm_shopper_group where shopper_group_name = '" . $price [$owner] ['Наименование'] . "'" );
-		$rows_sub_Count = $db->loadResult ();
-
-		// Если группа покупателей по имени есть в базе то мы ее не меняем , а берем ее id
-		if (isset ( $rows_sub_Count )) {
-			$price [$owner] ['shopper_group_id'] = ( int ) $rows_sub_Count;
-		} else // Если группа покупателей по имени не найдена базе то мы ее создаем
-		{
-			$price [$owner] ['shopper_group_id'] = newShopperGroupCreate ( $price [$owner] ['Наименование'] );
-		}
-	}
-	return $price;
-}
 # Парсинг типов цен на характеристики
-function price_tovar_create($xml, $price_tovar) {
-	global $products;
-	global $price;
 
-	global $log;
-
-	if (!isset($xml->Предложения))
-	{
-		return $price;
-	}
-	# Перебираем товары
-	foreach ($xml->Предложения->Предложение as $price_data)
-	{
-		$owner = substr((string)$price_data->Ид,0,36);
-		$owner2 = (string)$price_data->Ид;
-		# наложить цену на характеристики
-		# подбор товара по наличию характеристик
-		if (isset($products[$owner2]))
-		{
-			$owner=$owner2;
-			$log->addEntry ( array ('comment' => 'product price add char '.$owner2));
-		} else
-		{
-			$log->addEntry ( array ('comment' => 'product price add  '.$owner));
-		}
-
-		$price_tovar [$owner] ['product_id'] = $products [$owner] ['product_id'];
-
-		# Перебираем цены на товар
-		foreach ($price_data->Цены->Цена as $price_tovar_data)
-
-		{
-			$price_tovar[$owner]['shopper_group_id'] 	= $price ["$price_tovar_data->ИдТипаЦены"] ["shopper_group_id"];
-			$price_tovar[$owner]['ЦенаЗаЕдиницу']		=	(int)$price_tovar_data->ЦенаЗаЕдиницу;
-			$price_tovar[$owner]['Валюта']				=	(string)$price_tovar_data->Валюта;
-			$price_tovar[$owner]['Единица']				=	(string)$price_tovar_data->Единица;
-			$price_tovar[$owner]['Коэффициент']			=	(string)$price_tovar_data->Коэффициент;
-		}
-
-		$price_tovar[$owner]['Количество']				=	(int)$price_data->Количество;
-		#	$log->addEntry ( array ('comment' => 'product price quantity  ' . $price_tovar [$owner] ['product_id'] . " guid " . $owner . " ="	.	$price_tovar[$owner]['Количество']));
-	}
-	return $price_tovar;
-}
 
 # Создание новой группы для производителя
 function manufacturer_category_create($name,$desc='') {
@@ -503,59 +476,7 @@ function manufacturer_create($name) {
 }
 # Обработка характеристик товара возвращает строковый индекс характеристик
 #
-function products_character($xml,$id,$ownerid) {
-	global $db;
-	global $log;
 
-	global $products;
-	global $char_type_name;
-
-
-
-	$db->setQuery ( "DELETE  #__vm_product_attribute where product_id=". $id);
-	$db->query ();
-
-
-	#Перебираем характеристики товара
-	#
-
-	$i=1;
-	foreach ($xml->ХарактеристикиТовара->ХарактеристикаТовара as $char_data)
-	{
-		#
-		if (!isset($char_type_name[$ownerid]["$char_data->Наименование"]))
-		{
-			$ins = new stdClass ();
-			$ins->product_id 		= $ownerid;
-			$ins->attribute_name 	= "$char_data->Наименование";
-			$ins->attribute_list 	= $i;
-			$i++;
-			if (! $db->insertObject ( '#__vm_product_attribute_sku', $ins)) {
-				return false;
-			}
-			$char_type_name[$ownerid]["$char_data->Наименование"]="$char_data->Наименование";
-		}
-
-
-
-		$ins = new stdClass ();
-		$ins->product_id  		= $id;
-		$ins->attribute_name  	= "$char_data->Наименование";
-		$ins->attribute_value 	= "$char_data->Значение";
-
-		if (! $db->insertObject ( '#__vm_product_attribute', $ins )) {
-			return false;
-		}
-
-		/*$log->addEntry ( array ('comment' => '999 ' ));
-		$db->setQuery ( "REPLACE INTO  #__vm_product_attribute_sku
-		(product_id, attribute_name,attribute_list)
-		VALUES (" . $ownerid . "," . "$char_data->Наименование",$i );
-		$db->query ();
-		$i++;*/
-	}
-
-}
 
 
 /**
@@ -577,13 +498,13 @@ function vm_get_id($product_name,$product_sku) {
 
 
 /**
- *Берет ид из vm_category по наименованиею
+ *Берет ид из vm_category по наименованиею и парент ID
  *$product_name
  *$product_parent_id
  */
 function vm_get_category_id($category_name,$parent_id) {
 	global $db;	
-	$q ="SELECT a.category_id FROM jos_vm_category a,jos_vm_category_xref b  
+	$q ="SELECT a.category_id FROM #__vm_category a,jos_vm_category_xref b  
 	where 
 	b.category_parent_id = ".$parent_id."
 	and b.category_child_id = a.category_id
@@ -596,6 +517,30 @@ function vm_get_category_id($category_name,$parent_id) {
 	}
 	return 0;
 }
+
+/**
+ * Берет из vm_category по наименованиею и наименованию парент
+ * @param  $category_name
+ * @param  $parent_name
+ * @return null|number
+ */
+function vm_get_category_id_name($category_name,$parent_name) {
+	global $db;	
+	$q ="	SELECT a.category_id FROM #__vm_category a,#__vm_category_xref b, #__vm_category c  
+	where 
+	b.category_parent_id = c.category_id
+	and b.category_child_id = a.category_id
+	and a.category_name = '".$category_name."'
+	and c.category_name = '".$parent_name."'";
+
+	$db->setQuery ($q);
+	$rows_sub_Count = $db->loadResult ();
+	if (isset ( $rows_sub_Count )) {
+	return $rows_sub_Count;
+	}
+	return 0;
+}
+
 
 
 /**
@@ -630,107 +575,17 @@ function vm_product_notpublish_if_not_updated(){
 	
 }
 
-
 //category_parent_id
 //category_child_id
 //category_list
 
 
 # Создание дерева групп
-function groups_xref_create($category) {
-	global $db;
-
-	foreach ( $category as $category_data ) {
-		$ins = new stdClass ();
-		$ins->category_parent_id = ( int ) $category_data ['owner'];
-		$ins->category_child_id = ( int ) $category_data ['category_id'];
-		$ins->category_list = null;
-
-		if (! $db->insertObject ( '#__vm_category_xref', $ins )) {
-			return false;
-		}
-
-	}
-}
-# Обход свойств для поиска id производителя, по id производителя в свойствах товара находим значение свойства производитель
-function property_find($xml) {
-	$property = '';
-	if (!isset($xml->Свойства))
-
-	{
-		return $property;
-	}
-	foreach ($xml->Свойства->Свойство as $property_data)
-	{
-		$name 	=(string)$property_data->Наименование;
-		if ($name == "Производитель") {
-			$property	=(string)$property_data->Ид;
-		}
-	}
-	return $property;
-}
-# Обход дерева групп полученных из 1С
-function groups_create($xml, $category, $owner) {
-
-	global $db;
-	global $log;
-
-	if (!isset($xml->Группы))
-
-	{
-		return $category;
-	}
-
-	foreach ($xml->Группы->Группа as $category_data)
-
-	{
-		$name 	=(string)$category_data->Наименование;
-		$cnt	=(string)$category_data->Ид;
-
-		$category [$cnt] ['name'] = $name;
-		$category [$cnt] ['owner'] = $owner;
-		$db->setQuery ( "SELECT category_id FROM #__vm_category where category_name = '" . $name . "'" );
-		$rows_sub_Count = $db->loadResult ();
-		// Если группа по имени есть в базе то мы ее не меняем , а берем ее id
-		if (isset ( $rows_sub_Count )) {
-			$category [$cnt] ['category_id'] = ( int ) $rows_sub_Count;
-		} else // Если группа по имени не найдена базе то мы ее создаем
-		{
-			$category [$cnt] ['category_id'] = newCategory ( $name );
-		}
-
-		$log->addEntry ( array ('comment' => 'groups_create ' . $category [$cnt] ['category_id'] . ";" . $name ) );
-
-		$category = groups_create ( $category_data, $category, $category [$cnt] ['category_id'] );
-
-	}
-	return $category;
-}
-# добавляем группу покупателей
-function newShopperGroupCreate($name) {
-
-	global $vendor_1C_ID;
-
-	global $db;
-
-	$ins = new stdClass ();
-	$ins->shopper_group_id 			= NULL;
-	$ins->shopper_group_name 		= $name;
-	$ins->vendor_id 				= $vendor_1C_ID;
-	$ins->shopper_group_desc 		= '';
-	$ins->show_price_including_tax 	= 1;
-	$ins->default 					= 1;
-	$ins->category_list 			= null;
-
-	if (! $db->insertObject ( '#__vm_shopper_group', $ins, 'shopper_group_id' )) {
-		return false;
-	}
-	return $ins->shopper_group_id;
-}
-
-
 /**
- *заполнение цены товара
+ * Устанавливает цену на продукт
+ * @param  $product_id
+ * @param  $price_tovar
+ * @return boolean
  */
 function vm_newProduct_price($product_id,$price_tovar) {
 
@@ -767,6 +622,37 @@ function vm_newProduct_price($product_id,$price_tovar) {
 
 	
 }
+# Обход свойств для поиска id производителя, по id производителя в свойствах товара находим значение свойства производитель
+
+# Обход дерева групп полученных из 1С
+
+# добавляем группу покупателей
+function newShopperGroupCreate($name) {
+
+	global $vendor_1C_ID;
+
+	global $db;
+
+	$ins = new stdClass ();
+	$ins->shopper_group_id 			= NULL;
+	$ins->shopper_group_name 		= $name;
+	$ins->vendor_id 				= $vendor_1C_ID;
+	$ins->shopper_group_desc 		= '';
+	$ins->show_price_including_tax 	= 1;
+	$ins->default 					= 1;
+	$ins->category_list 			= null;
+
+	if (! $db->insertObject ( '#__vm_shopper_group', $ins, 'shopper_group_id' )) {
+		return false;
+	}
+	return $ins->shopper_group_id;
+}
+
+
+/**
+ *заполнение цены товара
+ */
+
 
 
 # выгрузка заказов из VirtueMart

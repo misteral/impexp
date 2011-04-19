@@ -245,9 +245,11 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 	}
 
 
-/**Возвращает головные группы */
+/**Возвращает головные групп */
 	function parent_gr() {
-		
+		$q = "select * from jos_al_import where product_parent_id = 0";
+		$res = $this->query($q);
+		return $res;
 	}
 	
 
