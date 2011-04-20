@@ -47,18 +47,10 @@ if ($value->product_status==1){//не обрабатываем если не с�
 			//$lid=$db->last_id()+1;
 			
 			$look = $o->chk($el1->getElementByTagName('td.item-list-name-photo a'), '!!!!!! Пуст родительский элемент td.item-list-name-photo');
-			if (!$skip){$item->product_name=@mysql_escape_string($o->ch($look->text(),'Имя продукта пустое!!!!!!!!!!'));}		
+			if (!$skip){$item->product_name=mysql_escape_string($o->ch($look->text(),'Имя продукта пустое!!!!!!!!!!'));}		
 			if (!$skip){$look=$o->chk($el1->getElementByTagName('td.item-list-sklad'),'!!!!!!Пустой родителький элемент td.item-list-sklad');}
 			if (!$skip){$item->product_ost= $o->ch($look->text(),'Остаток пуст у'.$item->product_name);}
 			
-			if (!$skip){//не берем в расчет товар которого мало 		
-			    $item->product_ost=trim (str_replace('новинка!', '', $item->product_ost));
-			     if ($item->product_ost =='от 0 до 10' 
-				     or $item->product_ost =='от 10 до 50' 
-				     or $item->product_ost =='от 50 до 100'
-			     )
-			     {$skip=true;}
-			}
 			
 			if (!$skip){$look = $o->chk($el1->getElementByTagName('td.item-list-name-photo img'),'!!!!! Пустой родителький элемент td.item-list-name-photo img');}
 			if (!$skip){$item->product_sku=$o->ch($look->id,'SKU пуст у '.$item->product_name);}
@@ -80,6 +72,15 @@ if ($value->product_status==1){//не обрабатываем если не с�
 			if (!$skip){$look=$o->chk($el1->getElementByTagName('div.item-list-stuff'),'Пустой родителький элемент div.item-list-stuff');}
 			if (!$skip){$desk2=$o->ch($look->text(),'');}
 		
+			if (!$skip){//не берем в расчет товар которого мало 		
+			    $item->product_ost=trim (str_replace('новинка!', '', $item->product_ost));
+			    
+			    if ($item->product_price<1000 and $item->product_ost =='от 0 до 10' 
+				     or $item->product_ost =='от 10 до 50' 
+				     or $item->product_ost =='от 50 до 100'
+			     )
+			     {$skip=true;}
+			}
 			
 			if(!$skip){
 				// обработаем наименование уберем артикул 
