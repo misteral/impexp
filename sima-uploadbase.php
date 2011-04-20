@@ -13,7 +13,7 @@ $manufacturer_ID = vendor_create($manufacturer); //создаем или бер�
 
 
 
-vm_product_notpublish_if_not_updated(); //опасная функция !!! not publish если товара нет такого в обновке с симы
+//vm_product_notpublish_if_not_updated(); //опасная функция !!! not publish если товара нет такого в обновке с симы
 
 //************** Занесем головные группы************************
 $rows = $db_my->parent_gr();
@@ -77,20 +77,9 @@ while ($row =  mysql_fetch_array($rows)){
 			$category_id = vm_get_category_id_name($parent_name['product_name'], $ppname['product_name']);
 		}
 		newProducts_xref($category_id,$product_id);
+		vm_productmf_xref($product_id);
 		$db_my->update_status('5', $row['product_id']);
-		
-		// **** обработка его групп****
-		//$pp_id  = $row['product_parent_id'];
-
-			
 		
 		}//это группа
 }		
-
-
-
-		
-
-
-
 ?>

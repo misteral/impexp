@@ -379,6 +379,27 @@ function newProducts_xref($category_id, $product_id) {
 
 }
 
+
+
+/**
+ * Добавляет соответствие продукт производитель
+ * @param  $product_id
+ * @param  $manufacturer_id global
+ * @return boolean
+ */
+function vm_productmf_xref( $product_id) {
+	global $db;
+	global $manufacturer_ID;
+		$ins = new stdClass ();
+		$ins->product_id = $parent_id;
+		$ins->manufacturer_id = $manufacturer_ID;
+	
+		if (! $db->insertObject ( '#__vm_product_mf_xref', $ins )) {
+			return false;
+		}	
+} //vm_productmf_xref
+
+
 /**
  * Добавляет соответствте категория категория
  * @param  $parent_id
