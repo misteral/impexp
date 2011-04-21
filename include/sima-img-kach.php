@@ -1,33 +1,5 @@
 <?php
 
-ini_set ( 'max_execution_time', 0);// убираем ограничение по времени;
-ini_set ( 'max_input_time', 0); //
-set_time_limit (0);
-
-require ('include/sund.class.php');
-
-$db  = new ex_Mysql();
-$pars = new parse();
-
-
-define ( 'DS', DIRECTORY_SEPARATOR );
-//define ( 'IMAGE_BASE', dirname ( __FILE__ ) . DS.'images' );
-define ( 'IMAGE_BASE', 'c:' . DS.'site-images' );
-define ( 'TARGET', 'http://sima-land.ru' );
-define ('CATALOG','/catalog.html');
-define ( 'VENDOR','1' ); //вендор сима
-define( '_TRY', 3); //количество попыток закачки
-define ( 'WGET_BASE', 'c:' . DS.'wget'.DS.'bin' );
-define( 'WGET_FILE', 'wget.sima-images' );
-$wget = TRUE;
-if (file_exists(WGET)){unlink(WGET_BASE.DS.WGET_FILE);}
-
-$o = new output('sima-img-kach');
-$o->echo = false;
-//$pars->proxy = '67.205.68.11:8080';
-//$pars->proxy = '10.44.33.88:8118';
-
-
 // -------------- начинаем обработку-----------------------
 
 $rows = $db->child_gr();

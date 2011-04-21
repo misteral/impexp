@@ -1,35 +1,6 @@
 <?php
-//exit();
-ini_set ( 'max_execution_time', 0);// убираем ограничение по времени;
-ini_set ( 'max_input_time', 0); //
-set_time_limit (0);
 
-require ('include/sund.class.php');
-include('include/simple_html_dom.php');
-
-$db  = new ex_Mysql();
-$db->clear(1); //почистим базу
-$pars = new parse();
-$o = new output('sima-kach');
-$o->echo = false;
-
-define ( 'DS', DIRECTORY_SEPARATOR );
-define ( 'CPATH_BASE', dirname ( __FILE__ ) . DS.'dw-sima' );
-define ( 'CPATH_BASE', 'dw-sima' );
-define ( 'TARGET', 'http://sima-land.ru' );
-define ('CATALOG','/catalog.html');
-define ( 'VENDOR','1' ); //вендор сима
-define( '_TRY', 3); //количество попыток закачки
-define('DIF_DATE', '3');
-define( 'WGET', 'wget.sima-catalog' );
-$wget = false;
-if (file_exists(WGET)){unlink(WGET);}
-
-//$pars->proxy = '67.205.68.11:8080';
-$pars->proxy = '10.44.33.88:8118';
-$pars->sleep = '5';
-//$pars->try = 3;
-
+//******************************** качаем каталог *********************************************************
 $url = TARGET.CATALOG;
 $file = CPATH_BASE.DS."catalog.html";
 if (file_exists($file) and filesize($file)){$creation_date = date ("d.m.y", filemtime($file));}//else{$creation_date = 0;}
@@ -161,15 +132,5 @@ foreach ($rows as $value){
 	}
 		
 }		
-	
-	//echo ($out->txt());
-	
-/*	$document = phpQuery::newDocumentHTML($html);
-    $el1 = $document->find('table class="paginator"'); //нашли нужную таблицу*/
-
-//lush();
-	
-//	} //не качаем если статус 1
-//}
 
 ?>

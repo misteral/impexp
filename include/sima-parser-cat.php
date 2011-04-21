@@ -1,31 +1,6 @@
 <?php
 
-
-// описание 
-
-ini_set ( 'max_execution_time', 0);// убираем ограничение по времени;
-ini_set ( 'max_input_time', 0); //
-set_time_limit (0);
-
-require ('include/sund.class.php');
-include('include/simple_html_dom.php');
-
-$db  = new ex_Mysql();
-//$db->clear(1); //почистим базу
-$pars = new parse();
-$o = new output('sima-parser-cat');
-
-//$o->echo = true;
-
-define ( 'DS', DIRECTORY_SEPARATOR );
-define ( 'CPATH_BASE', dirname ( __FILE__ ) . DS.'dw-sima' );
-define ( 'TARGET', 'http://sima-land.ru' );
-define ('CATALOG','/catalog.html');
-define ( 'VENDOR','1' ); //вендор сима
-
-
 $count = 0;
-
 $rows = $db->child_gr();
 $o->add('Количество категорий для обработки '.sizeof($rows));
 foreach ($rows as $value){

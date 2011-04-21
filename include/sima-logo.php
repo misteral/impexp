@@ -1,13 +1,5 @@
 <?php
-require ('include/sund.class.php');
 
-define ( 'DS', DIRECTORY_SEPARATOR );
-//define ( 'IMAGE_BASE', dirname ( __FILE__ ) . DS.'images' );
-define ( 'IMAGE_BASE', 'c:' . DS.'site-images' );
-define ( 'TARGET', 'http://sima-land.ru' );
-define ('CATALOG','/catalog.html');
-define ('VM_IMAGE',dirname(dirname ( __FILE__ )).DS.'components'.DS.'com_virtuemart'.DS.'shop_image'.DS.'product');
-define ( 'VENDOR','1' ); //вендор сима
 
 $cat = scandir(IMAGE_BASE);
 foreach ($cat as $file){
