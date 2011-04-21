@@ -1,7 +1,7 @@
 <?php
 //require ('include/connectVM.php');
 
-$db_my  = new ex_Mysql();
+//$db_my  = new ex_Mysql();
 
 //сменим image full path al
 //$db->setQuery ( "SELECT category_id FROM #__vm_category where category_name = '" . $name . "'" );

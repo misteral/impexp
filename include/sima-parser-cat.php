@@ -1,7 +1,7 @@
 <?php
 
 $count = 0;
-$rows = $db->child_gr();
+$rows = $db_my->child_gr();
 $o->add('Количество категорий для обработки '.sizeof($rows));
 foreach ($rows as $value){
 if ($value->product_status==1){//не обрабатываем если не скачан или обработан
@@ -19,7 +19,7 @@ if ($value->product_status==1){//не обрабатываем если не с�
 		else {$o->add('Количество элементов для обработки='.sizeof($e));}
 		foreach ($e as $el1) { 
 			$item = new item_VM();
-			//$lid=$db->last_id()+1;
+			//$lid=$db_my->last_id()+1;
 			
 			$look = $o->chk($el1->getElementByTagName('td.item-list-name-photo a'), '!!!!!! Пуст родительский элемент td.item-list-name-photo');
 			if (!$skip){$item->product_name=mysql_escape_string($o->ch($look->text(),'Имя продукта пустое!!!!!!!!!!'));}		
@@ -71,22 +71,22 @@ if ($value->product_status==1){//не обрабатываем если не с�
 				$item->product_parent_id = $id;
 				$item->product_vendor = VENDOR;
 				$item->product_status = 2; //закачан
-				if ($th_id = $db->get_id($item->product_name, $item->product_sku, $item->product_parent_id)){//найден такой же
-					$db->update($item,$th_id);
+				if ($th_id = $db_my->get_id($item->product_name, $item->product_sku, $item->product_parent_id)){//найден такой же
+					$db_my->update($item,$th_id);
 				}else {//новый элемент
-					$db->add($item);
+					$db_my->add($item);
 					$count = $count+1; // общий подсчет
 				}
 			}else {
-				$db->count_inc('skip');
+				$db_my->count_inc('skip');
 				$skip = false;
 				}
 			
 	
-			//$db->update_status (2, $db->last_id());
+			//$db_my->update_status (2, $db_my->last_id());
 		//exit();
 	}//цикл по строкам таблицы
-	$db->update_status(2, $id);
+	$db_my->update_status(2, $id);
 // освободим переменные	
 		 
 	
@@ -98,9 +98,9 @@ if ($value->product_status==1){//не обрабатываем если не с�
 	unset($el1);
 	unset($e);
 	
-	$o->add('Категория ' .$value->product_name.' id =  '.$value->product_id.' add:'.$db->count_get('add').', skip:'.$db->count_get('skip').', update:'.$db->count_get('update').' Выполенено за:'.$o->timer_get() );
+	$o->add('Категория ' .$value->product_name.' id =  '.$value->product_id.' add:'.$db_my->count_get('add').', skip:'.$db_my->count_get('skip').', update:'.$db_my->count_get('update').' Выполенено за:'.$o->timer_get() );
 	$o->add('------------------------------------------------------------------------------------------------------------------------');
-	$db->count_reset('add');$db->count_reset('skip'); $db->count_reset('update'); //обнулим счетчики на категории
+	$db_my->count_reset('add');$db_my->count_reset('skip'); $db_my->count_reset('update'); //обнулим счетчики на категории
 	
 }	//не обрабатываем если не скачан
 } //идем по целевым группам

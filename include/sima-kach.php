@@ -55,25 +55,25 @@ foreach ($e as $el2) { //нашли нужную таблицу
 		$item->product_price = 0;
 		$item->product_status = 0;
 		if ($cat_first){//первая
-			if ($db->isnew($item->product_name, $item->product_sku, $item->product_parent_id)){ // новая ? 
+			if ($db_my->isnew($item->product_name, $item->product_sku, $item->product_parent_id)){ // новая ? 
 				$parent = 0;
 				$item->product_parent_id = $parent;
 				//++$p;
-				$db->add($item);
-				$parent = $db->last_id();
+				$db_my->add($item);
+				$parent = $db_my->last_id();
 				$o->add('!!!Новая головная категория '.$item->product_name);
 				
 			}else {// первая не новая
-				$parent = $db->get_id($item->product_name, $item->product_sku, $item->product_parent_id);  // установим парент на текущую
+				$parent = $db_my->get_id($item->product_name, $item->product_sku, $item->product_parent_id);  // установим парент на текущую
 				//$o->add('Категория '.$item->product_name);
 				
 				}
 			$cat_first = FALSE;
 			$parent_name = $item->product_name;	
 		} else {//не первая 
-			if ($db->isnew($item->product_name, $item->product_sku, $item->product_parent_id)){ // не первая, новая ? 
+			if ($db_my->isnew($item->product_name, $item->product_sku, $item->product_parent_id)){ // не первая, новая ? 
 				++$p;
-				$db->add($item);
+				$db_my->add($item);
 			}
 		}//не первая 
 	}// цикл по тегу а 
@@ -84,7 +84,7 @@ foreach ($e as $el2) { //нашли нужную таблицу
 }//нашли нужную таблицу
 
 // изменим статус на другой чтоб не качал эти категории 
-$db->change_status('игрушка', 3, VENDOR);
+$db_my->change_status('игрушка', 3, VENDOR);
 
 $html->clear();
 $el2->clear();
@@ -92,7 +92,7 @@ $el3->clear();
 
 //------------------ качаем файлы по категориям------------------------------------
 
-$rows = $db->child_gr();
+$rows = $db_my->child_gr();
 foreach ($rows as $value){
 	if ($value->product_status<>3){//не качаем если статус 3
 		$dop = 1; // добавочный к файлу количество страниц 
@@ -109,7 +109,7 @@ foreach ($rows as $value){
 		$url = TARGET.$url;
 		$file = CPATH_BASE.DS.$sku.'_'.$dop.'.html';
 		//если есть отправка на wget ничего не качаем
-		if ($wget){file_put_contents(WGET, $url."\r\n", FILE_TEXT|FILE_APPEND); $db->update_status(1, $value->product_id); continue;}
+		if ($wget){file_put_contents(WGET, $url."\r\n", FILE_TEXT|FILE_APPEND); $db_my->update_status(1, $value->product_id); continue;}
 		
 	
 		if (file_exists($file) and filesize($file)){$creation_date = date ("d.m.y", filemtime($file));}//else{$creation_date = 0;}
@@ -121,11 +121,11 @@ foreach ($rows as $value){
 					$o->add('!!!!!!!!!Немогу скачать категорию '. $value->product_name);
 				}else{
 					$o->add('Категория скачана');
-					$db->update_status(1, $value->product_id);
+					$db_my->update_status(1, $value->product_id);
 						}//else файла нет
 			}else{
 				$o->add('Файл  существует и он не старее заданных параметров');
-				$db->update_status(1, $value->product_id);	
+				$db_my->update_status(1, $value->product_id);	
 			} 
 	}else{ //не качаем если статус 3
 		$o->add('Пропускаем группу '.$value->product_name);	

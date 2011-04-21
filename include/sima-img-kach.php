@@ -2,7 +2,7 @@
 
 // -------------- начинаем обработку-----------------------
 
-$rows = $db->child_gr();
+$rows = $db_my->child_gr();
 $o->add('Количество категорий для обработки (закачка картинок) '.sizeof($rows));
 $o->add('-------------------------------------------------------');
 foreach ($rows as $value){
@@ -10,12 +10,12 @@ if ($value->product_status==2){//не обрабатываем если не с�
 	$complete = TRUE; // если скачаны не все файлы категории
 	$id = $value->product_id; //id категории которую качаем
 	$c = 0; //счетчик скачанных файлов в котегории
-	$rows_pr = $db->get_product_from_parent($id);
+	$rows_pr = $db_my->get_product_from_parent($id);
 	$kol_el = mysql_num_rows($rows_pr);
 	$o->add('Обработка категории:'.$value->product_name.' ид:'.$value->product_id.'. Количество элементов: '.$kol_el);
 	if(!$kol_el){
 		$o->add('Группа вернула нуль элементов (товаров) '.$value->product_name);
-		$db->del($id);
+		$db_my->del($id);
 		$complete = false;
 		
 		continue;}
@@ -25,7 +25,7 @@ if ($value->product_status==2){//не обрабатываем если не с�
 		$url = TARGET.'/images/photo/big/'.$row['product_sku'].'.jpg';
 		if (file_exists($file) and filesize($file)) {
 			$o->add('Файл существует '.$row['product_sku']);
-			$db->update_status(4, $row['product_id']);
+			$db_my->update_status(4, $row['product_id']);
 			continue;
 		} //файл существует
 		if ($wget){
@@ -40,7 +40,7 @@ if ($value->product_status==2){//не обрабатываем если не с�
 			$complete=false;
 		
 		}else { //файл скачался
-			$db->update_status(4, $row['product_id']);
+			$db_my->update_status(4, $row['product_id']);
 			$c = $c+1;
 		}
 		unset($res);
@@ -49,7 +49,7 @@ if ($value->product_status==2){//не обрабатываем если не с�
 	} //идем по товарам
 	$o->add('Скачано файлов :'.$c);
 	$o->add('----------------------------------------------------');
-	if($complete){$db->update_status(4, $id);}
+	if($complete){$db_my->update_status(4, $id);}
 	//sleep(10);
 	
 }

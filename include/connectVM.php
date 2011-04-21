@@ -1,5 +1,5 @@
 ﻿<?
-define ( 'DS', DIRECTORY_SEPARATOR );
+//define ( 'DS', DIRECTORY_SEPARATOR );
 # директория в которой расположен движок /joomla/ ,если в корне сайта то пусто
 //define ( 'JPATH_BASE', dirname(dirname(dirname ( __FILE__ ))) . '' );
 # директория в которую записываются картинки и файл обмена
