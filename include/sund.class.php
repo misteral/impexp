@@ -215,7 +215,7 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 	$res = $this->query($q);
 	} 
 
-/**Возвращает все подчиненные группы (весь второй уровень)  */
+/**Возвращает все подчиненные группы (весь второй уровень) + головные без подкатегорий */
 	function child_gr(){
 	$q = 'select * from jos_al_import where product_parent_id<>0 and product_isgroup = true
 			union
@@ -252,6 +252,10 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 		return $res;
 	}
 	
+	/**
+	 * Возвращает весь второй уровень ...
+	 * @return null
+	 */
 	function child_gr2() {
 		$q = "select * from jos_al_import where product_parent_id <> 0 and product_isgroup = 1";
 		$res = $this->query($q);
@@ -376,7 +380,7 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 	 * @return array
 	 */
 	function get_product_from_parent($id) {
-		$q = 'select * from jos_al_import where product_parent_id ='.$id;
+		$q = 'select * from jos_al_import where product_isgroup = false and product_parent_id ='.$id;
 		$res = $this->query($q);
 		return $res;
 	} //_get_product($id)
@@ -507,7 +511,7 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
     * @param unknown_type $quality
     * @return null
     */
-   function img_resize($src, $out, $width, $height, $color = 0xFFFFFF, $quality = 100) 
+   	function img_resize($src, $out, $width, $height, $color = 0xFFFFFF, $quality = 100) 
 {
     // Если файл не существует
     if (!file_exists($src)) {
@@ -575,13 +579,13 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
     return $size_img;
 }
 
-	function add_logo($target_file,$logo,$overwrite = false) {
+	function add_logo($target_file,$logo,$quality=80,$overwrite = false) {
 		$watermarker = new PhpGdWatermarker($logo, PhpGdWatermarker::VALIGN_TOP, PhpGdWatermarker::HALIGN_LEFT);
 		$watermarker->setImageOverwrite($overwrite); // [OPTIONAL] Default is TRUE
 		$watermarker->setEdgePadding(3); // [OPTIONAL] Default is 5
-		$watermarker->setWatermarkedImageNamePostfix('_logo'); // [OPTIONAL] used IFF ImageOverwrite is FALSE, default is '_watermarked'
+		$watermarker->setWatermarkedImageNamePostfix('logo_'); // [OPTIONAL] used IFF ImageOverwrite is FALSE, default is '_watermarked'
 		
-		if($watermarker->applyWaterMark($target_file,80)){
+		if($watermarker->applyWaterMark($target_file,$quality)){
 		    return 0;
 		} else {
 		    echo $watermarker->getLastErrorMessage();

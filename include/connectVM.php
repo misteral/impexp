@@ -598,10 +598,6 @@ function vm_product_notpublish_if_not_updated(){
 	
 }
 
-//category_parent_id
-//category_child_id
-//category_list
-
 
 # Создание дерева групп
 /**

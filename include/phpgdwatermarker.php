@@ -277,7 +277,7 @@ class PhpGdWatermarker {
              }
              
              // dirname returns '.' if its current directory. So, it's safe to add '/' after dirname 
-             $backUpImageFile = $imageFileInfo['dirname'] .'/'. $imageFileInfo['filename'] . $this->newMarkedImagePostfix .'.'. $imageFileInfo['extension'];
+             $backUpImageFile = $imageFileInfo['dirname'] .'/'. $this->newMarkedImagePostfix .$imageFileInfo['filename'] . '.'. $imageFileInfo['extension'];
              
              // now we have the backupfile name - check if it exists
              if(file_exists($backUpImageFile)){

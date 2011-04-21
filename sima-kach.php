@@ -8,20 +8,21 @@ require ('include/sund.class.php');
 include('include/simple_html_dom.php');
 
 $db  = new ex_Mysql();
-//$db->clear(1); //почистим базу
+$db->clear(1); //почистим базу
 $pars = new parse();
 $o = new output('sima-kach');
-$out->echo = false;
+$o->echo = false;
 
 define ( 'DS', DIRECTORY_SEPARATOR );
 define ( 'CPATH_BASE', dirname ( __FILE__ ) . DS.'dw-sima' );
+define ( 'CPATH_BASE', 'dw-sima' );
 define ( 'TARGET', 'http://sima-land.ru' );
 define ('CATALOG','/catalog.html');
 define ( 'VENDOR','1' ); //вендор сима
 define( '_TRY', 3); //количество попыток закачки
 define('DIF_DATE', '3');
 define( 'WGET', 'wget.sima-catalog' );
-$wget = TRUE;
+$wget = false;
 if (file_exists(WGET)){unlink(WGET);}
 
 //$pars->proxy = '67.205.68.11:8080';
