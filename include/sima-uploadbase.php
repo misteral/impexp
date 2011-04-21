@@ -1,11 +1,8 @@
 <?php
-require ('include/sund.class.php');
-require ('include/connectVM.php');
+//require ('include/connectVM.php');
 
 $db_my  = new ex_Mysql();
 
-//Проверим промзводителя и если нет создадим
-$manufacturer = 'sima-land';
 //сменим image full path al
 //$db->setQuery ( "SELECT category_id FROM #__vm_category where category_name = '" . $name . "'" );
 

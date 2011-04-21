@@ -148,7 +148,14 @@ class ex_Mysql {
 	}
 	
 	
-	function del($it){}
+	/**
+	 * Удаляет елемент по ID ...
+	 * @param  $id
+	 */
+	function del($id){
+		$q = 'delete from jos_al_import where product_id = '.$id;
+		$res = $this->query($q);
+	}
 
 	
 	/**

@@ -1,25 +1,11 @@
 ﻿<?
-
-
-define ( 'FIX_VERSION', '1.1.3с' ); // Версия скрипта
-define ( 'FIX_CODING', 'UTF-8' ); 	// Задается кодировка в которой происходит выгрузка заказов в 1С
-define ( 'FIX_TYPEPRICE', '-default-' ); // Задаем имя типа цен которое выводится по умолчанию
-										 // не доделано.
-define ( 'FIX_CLIENT', 1 ); 		// 0 - Выгружать всех клиентов в 1С на контрагента "Физ лицо"  1- Выгружать всех клиентов в 1С как есть
-define ( 'FIX_ZIP', 'yes' ); 		// true - использовать zip сжатие при получении файлов
-define ( 'FIX_ZIPSIZE', 2048000 ); 	// размер арива zip в байтах
-
-
-ini_set ( 'display_errors', '1' );
-error_reporting ( E_ALL );
-define ( '_JEXEC', 1 );
 define ( 'DS', DIRECTORY_SEPARATOR );
 # директория в которой расположен движок /joomla/ ,если в корне сайта то пусто
-define ( 'JPATH_BASE', dirname(dirname(dirname ( __FILE__ ))) . '' );
+//define ( 'JPATH_BASE', dirname(dirname(dirname ( __FILE__ ))) . '' );
 # директория в которую записываются картинки и файл обмена
-define ( 'JPATH_BASE_PICTURE', JPATH_BASE .DS.'components'.DS.'com_virtuemart'.DS.'shop_image'.DS.'product');
+//define ( 'JPATH_BASE_PICTURE', JPATH_BASE .DS.'components'.DS.'com_virtuemart'.DS.'shop_image'.DS.'product');
 # директория в которую записываются маленькие картинки
-define ( 'JPATH_BASE_PICTURE_SMALL', JPATH_BASE_PICTURE .DS.'resized' );
+//define ( 'JPATH_BASE_PICTURE_SMALL', JPATH_BASE_PICTURE .DS.'resized' );
 
 require_once (JPATH_BASE . DS . 'includes' . DS . 'defines.php');
 require_once (JPATH_BASE . DS . 'includes' . DS . 'framework.php');
