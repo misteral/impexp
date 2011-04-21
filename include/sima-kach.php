@@ -74,7 +74,7 @@ foreach ($e as $el2) { //нашли нужную таблицу
 			if ($db_my->isnew($item->product_name, $item->product_sku, $item->product_parent_id)){ // не первая, новая ? 
 				++$p;
 				$db_my->add($item);
-			}
+			}//не первая, новая
 		}//не первая 
 	}// цикл по тегу а 
 		if ($p){
@@ -125,7 +125,7 @@ foreach ($rows as $value){
 						}//else файла нет
 			}else{
 				$o->add('Файл  существует и он не старее заданных параметров');
-				$db_my->update_status(1, $value->product_id);	
+				//$db_my->update_status(1, $value->product_id);	
 			} 
 	}else{ //не качаем если статус 3
 		$o->add('Пропускаем группу '.$value->product_name);	
