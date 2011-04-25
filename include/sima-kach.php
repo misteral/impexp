@@ -84,7 +84,7 @@ foreach ($e as $el2) { //нашли нужную таблицу
 }//нашли нужную таблицу
 
 // изменим статус на другой чтоб не качал эти категории 
-$db_my->change_status('игрушка', 3, VENDOR);
+// $db_my->change_status('игрушка', 3, VENDOR);
 
 $html->clear();
 $el2->clear();

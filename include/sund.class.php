@@ -383,15 +383,32 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 	/**
 	 * Берет продукты из категории
 	 * 
-	 * @param unknown_type $id  парент
+	 * @param  $id  парент
 	 * @return array
 	 */
 	function get_product_from_parent($id) {
-		$q = 'select * from jos_al_import where product_isgroup = false and product_parent_id ='.$id;
+		$q = 'select * from jos_al_import where product_parent_id ='.$id;
 		$res = $this->query($q);
 		return $res;
 	} //_get_product($id)
 
+	function del_null_cat() {
+		//идем сверху вниз на 3 уровня
+		$q0 = 'select * from jos_al_import where product_parent_id = 0 and product_isgroup = true';
+		$res0 = $this->query($q0);
+		while ($row0 = mysql_fetch_array($res0)) {
+			$q1 = 'select * from jos_al_import where product_parent_id = '.$row0['product_id'];
+			$res1 = $this->query($q1);
+				while ($row1 = mysql_fetch_array($res1)) {
+					if (!mysql_num_rows($res1)){
+						$this->del($row0['product_id']);
+						continue;
+						}
+					
+				}
+		}
+		
+	} //del_null_cat($id)
 	
 	
 	/**
@@ -407,7 +424,7 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 	
 	
 	/**
-	 * Берем все продукты со статусом 
+	 * Берем все  со статусом 
 	 * @param unknown_type $product_status
 	 * return @mysql_fetch_array($res);
 	 */

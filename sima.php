@@ -12,7 +12,7 @@ define ( 'TARGET', 'http://sima-land.ru' );								//url сайта
 define ( 'CATALOG','/catalog.html'); 									//url каталога
 define ( 'VENDOR','1' ); 												//вендор сима
 define ( '_TRY', 3); 													//количество попыток закачки
-define ( 'DIF_DATE', '3'); 												//количество дней на устаревание
+define ( 'DIF_DATE', '7'); 												//количество дней на устаревание
 define ( 'WGET_BASE', 'c:' . DS.'wget'.DS.'bin' );						//бинарник wget 
 define ( 'WGET_FILE', 'wget.sima-images' );								//файл источник для wget
 //define ( 'IMAGE_BASE', dirname ( __FILE__ ) . DS.'images' );
@@ -42,17 +42,17 @@ $pars->sleep = '5';
 
 
 //качаем и обрабатываем каталог
-//include('include/sima-kach.php');
+include('include/sima-kach.php');
 
 //обрабатываем категрии с товаром
-//include('include/sima-parser-cat.php');
+include('include/sima-parser-cat.php');
 
 //качаем картинки
 //$wget = true;
-//include('include/sima-img-kach.php');
+include('include/sima-img-kach.php');
 
 //добавляем логотип переносим в нужный каталог
-//include('include/sima-logo.php');
+include('include/sima-logo.php');
 
 
 //выгружаем все в virtuemart
