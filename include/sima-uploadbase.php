@@ -8,7 +8,7 @@
 
 $manufacturer_ID = vendor_create($manufacturer); //создаем или берем cуществующий ид производителя
 
-
+vm_unpublish_product_mnf(); // снимаем с публикации все данного mnf
 
 //vm_product_notpublish_if_not_updated(); //опасная функция !!! not publish если товара нет такого в обновке с симы
 
@@ -46,7 +46,7 @@ while ($row =  mysql_fetch_array($rows)){
 
 
 //******************* обработка товаров***************************
-$rows = $db_my->get_from_status('4');
+$rows = $db_my->get_from_status('4');  // берем со статусом 4
 
 while ($row =  mysql_fetch_array($rows)){
 	if  (!$row['product_isgroup']){ //это группа

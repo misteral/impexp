@@ -56,7 +56,7 @@ $pars->sleep = '5';
 
 
 //выгружаем все в virtuemart
-//include('include/sima-uploadbase.php');
+include('include/sima-uploadbase.php');
 
 //$db_my->del_null_cat();
 

@@ -377,7 +377,7 @@ function vm_productmf_xref( $product_id) {
 	global $db;
 	global $manufacturer_ID;
 		$ins = new stdClass ();
-		$ins->product_id = $parent_id;
+		$ins->product_id = $product_id;
 		$ins->manufacturer_id = $manufacturer_ID;
 	
 		if (! $db->insertObject ( '#__vm_product_mf_xref', $ins )) {
@@ -551,6 +551,26 @@ function vm_get_category_id_name($category_name,$parent_name) {
 }
 
 
+/**
+ * Снимает с публикации категорию
+ * @todo сделать функцию 
+ */
+function vm_unpublish_category_mnf() {
+	global $db;
+	global $manufacturer_ID;
+}
+/**
+ * снимает с публикации всю продукция в контексте данного mnf
+ */
+function vm_unpublish_product_mnf() {
+	global $db;
+	global $manufacturer_ID;
+	$q = "update #__vm_product a, #__vm_product_mf_xref b
+	set a.product_publish = 'N' 
+	where b.manufacturer_id = ".$manufacturer_ID." and b.product_id = a.product_id";
+	$db->setQuery ($q);
+	$db->query ();
+}
 
 /**
  * Устанавливает publish на продукт $product_id
@@ -562,7 +582,16 @@ function vm_set_publish($product_id) {
 	$db->query ();
 }
 
-
+/**
+ * Снимаем с публикации
+ * @param  $product_id
+ */
+function vm_set_unpublish ($product_id){
+	global $db;
+	$q = "update #__vm_product set product_publish = 'N' where product_id = '".$product_id."'";
+	$db->setQuery ($q);
+	$db->query ();
+}
 
 /**
  *Ставит нот паблиш если нет в обновках 
