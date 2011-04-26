@@ -399,12 +399,17 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 		while ($row0 = mysql_fetch_array($res0)) {
 			$q1 = 'select * from jos_al_import where product_parent_id = '.$row0['product_id'];
 			$res1 = $this->query($q1);
-				while ($row1 = mysql_fetch_array($res1)) {
-					if (!mysql_num_rows($res1)){
-						$this->del($row0['product_id']);
+			if (!mysql_num_rows($res1)){ //удаляем головную группу если нет ничего в ней 
+				$this->del($row0['product_id']);
+				continue;
+				}
+			while ($row1 = mysql_fetch_array($res1)) {
+					$q2 = 'select * from jos_al_import where product_parent_id = '.$row1['product_id'];
+					$res2 = $this->query($q2);
+					if (!mysql_num_rows($res2)){ //удаляем головную группу если нет ничего в ней 
+						$this->del($row1['product_id']);
 						continue;
-						}
-					
+					}	
 				}
 		}
 		

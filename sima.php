@@ -31,7 +31,7 @@ $o->echo = false;
 //Проверим промзводителя и если нет создадим
 $manufacturer = 'sima-land';
 
-$wget = false;
+$wget = FALSE;
 
 if (file_exists(WGET)){unlink(WGET);}
 
@@ -42,19 +42,22 @@ $pars->sleep = '5';
 
 
 //качаем и обрабатываем каталог
-include('include/sima-kach.php');
+//include('include/sima-kach.php');
 
 //обрабатываем категрии с товаром
-include('include/sima-parser-cat.php');
+//include('include/sima-parser-cat.php');
 
 //качаем картинки
 //$wget = true;
-include('include/sima-img-kach.php');
+//include('include/sima-img-kach.php');
 
 //добавляем логотип переносим в нужный каталог
-include('include/sima-logo.php');
+//include('include/sima-logo.php');
 
 
 //выгружаем все в virtuemart
-include('include/sima-uploadbase.php');
+//include('include/sima-uploadbase.php');
+
+//$db_my->del_null_cat();
+
 ?>
