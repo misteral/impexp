@@ -38,6 +38,14 @@ if ($value->product_status==1){//не обрабатываем если не с�
 				if ($skip){$skip = false; $item->product_ed = 'шт';}
 			}
 			
+			// обработаем количество в наборе. 
+			if (!$skip){$look= $o->chk($el1->getElementByTagName('td.item-list-package div'),'');}
+			if (!$skip){$nabor = $o->ch($look->text(),'Ссылка пустая у '.$item->product_name);
+			preg_match('|.*\((.*)\)|Uis', $nabor, $matches);
+			$desk3=trim($matches[1]); 
+			}
+			
+			
 			if (!$skip){$look=$o->chk($el1->getElementByTagName('div.item-list-price-div'),'!!!!!!Пустой родителький элемент div.item-list-price-div');}
 			if (!$skip){$item->product_price = $o->ch($look->text(),'Цена пустая у '.$item->product_name);}
 			if (!$skip){$look=$o->chk($el1->getElementByTagName('td.item-list-minimal'),'!!!!!!Пустой родителький элемент td.item-list-minimal');}
@@ -62,8 +70,10 @@ if ($value->product_status==1){//не обрабатываем если не с�
 				$item->product_name = trim(str_replace($item->product_sku, '', $item->product_name));
 				//запятую если есть desk2 и desc1
 				if ($desk2 and $desk1){$desk2 = $desk2.',';}
-	
-				$item->product_desc =trim($desk2).' '.trim($desk1);
+					$item->product_desc =trim($desk2).' '.trim($desk1);
+				if ($desk3){
+					$item->product_desc	 = $item->product_desc.', '.$desk3;
+				}
 				$item->product_ed = trim($item->product_ed);
 				$item->product_min =trim($item->product_min);
 				$item->product_ost = trim($item->product_ost);

@@ -45,7 +45,7 @@ $pars->sleep = '5';
 //include('include/sima-kach.php');
 
 //обрабатываем категрии с товаром
-//include('include/sima-parser-cat.php');
+include('include/sima-parser-cat.php');
 
 //качаем картинки
 //$wget = true;
@@ -55,10 +55,10 @@ $pars->sleep = '5';
 //include('include/sima-logo.php');
 
 
-$db_my->del_null_cat();
+//$db_my->del_null_cat();
 //выгружаем все в virtuemart
-include('include/sima-uploadbase.php');
+//include('include/sima-uploadbase.php');
 
-vm_set_group_img();
+//vm_set_group_img();
 
 ?>
