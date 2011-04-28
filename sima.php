@@ -55,10 +55,10 @@ $pars->sleep = '5';
 //include('include/sima-logo.php');
 
 
+$db_my->del_null_cat();
 //выгружаем все в virtuemart
-//include('include/sima-uploadbase.php');
+include('include/sima-uploadbase.php');
 
-//$db_my->del_null_cat();
 vm_set_group_img();
 
 ?>

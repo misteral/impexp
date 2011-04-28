@@ -421,6 +421,7 @@ function newProducts($product_parent_id,$product_SKU, $product_name, $product_de
 	$ins->product_SKU = $product_SKU;
 	$ins->product_name = $product_name;
 	$ins->product_desc = $product_desc;
+	$ins->product_s_desc = $product_desc;
 	$ins->product_publish = 'Y';
 	$ins->product_available_date = time ();
 	$ins->product_in_stock		 = 99;
@@ -504,7 +505,20 @@ function vm_get_id($product_name,$product_sku) {
 	return 0;
 }
 
-
+/**
+ * Обновляем картинку у продукта
+ * @param unknown_type $product_id
+ * @param unknown_type $product_full_image
+ * @param unknown_type $product_thumb_image
+ */
+function vm_update_image($product_id, $product_full_image, $product_thumb_image) {
+	global $db;	
+	$item = new stdClass();
+	$item->product_id = $product_id;
+	$item->product_full_image = $product_full_image;
+	$item->product_thumb_image = $product_thumb_image;
+	$db->updateObject( '#__vm_product', $item, '$product_id' );
+}
 
 /**
  *Берет ид из vm_category по наименованиею и парент ID

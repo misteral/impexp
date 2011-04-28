@@ -51,20 +51,26 @@ $rows = $db_my->get_from_status('4');  // берем со статусом 4
 while ($row =  mysql_fetch_array($rows)){
 	if  (!$row['product_isgroup']){ //это группа
 		$product_id =  vm_get_id($row['product_name'],$row['product_sku']); // есть ли такой товар по имени и артикулу
+		
+		$product_full_image =$manufacturer_ID.'_'.'500_'.$row['product_sku'].'.jpg';
+		$product_thumb_image =mysql_escape_string('resized/'.$manufacturer_ID.'_'.'90_'.$row['product_sku'].'.jpg');
+		
 		if ($product_id){//есть такой товар
 			vm_set_publish($product_id); //установим флаг publish
 			$product_price = round ($row['product_price']*$row['product_margin']);
+			vm_update_image($product_id, $product_full_image, $product_thumb_image); // обновим картинку
 			vm_newProduct_price($product_id,$product_price); //установим цену
 			
 		}//есть такой товар
 		else {//нет такого товара 
-			$product_full_image =$manufacturer_ID.'_'.'500_'.$row['product_sku'].'.jpg';
-			$product_thumb_image =mysql_escape_string('resized'.DS.$manufacturer_ID.'_'.'90_'.$row['product_sku'].'.jpg');
+
 			$product_id=newProducts(0,$row['product_sku'], $row['product_name'], $row['product_desc'], $product_full_image, $product_thumb_image, $row['product_ed']);
 			$product_price = round ($row['product_price']*$row['product_margin']);
 			vm_newProduct_price($product_id,$product_price); //установим цену
-
+			
 		}  //нет такого товара 
+		
+		
 		
 		$parent_name = $db_my->get_from_id($row['product_parent_id']);
 		$ppname = $db_my->get_from_id($parent_name['product_parent_id']);
