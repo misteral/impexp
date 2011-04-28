@@ -613,6 +613,43 @@ function vm_product_notpublish_if_not_updated(){
 	
 }
 
+/**
+ * Ставит картинку на группу из подчиненного товара
+ */
+function vm_set_group_img() {
+	global $db;
+	$q = "select distinct a.category_id, a.category_name from jos_vm_category a
+			left join jos_vm_product_category_xref b on a.category_id = b.category_id
+			where a.category_full_image = ''
+			or a.category_thumb_image = ''
+			or a.category_thumb_image is null
+			or a.category_full_image is null
+			and a.category_publish = 'Y'";
+	$db->setQuery ( $q );
+	$rows = $db->loadObjectList ();
+	foreach ( $rows as $row ) {
+			$q = "select a.* from #__vm_product a
+					left join #__vm_product_category_xref b on a.product_id = b.product_id 
+					where b.category_id =".$row->category_id."
+					and a.product_full_image <> ''
+					and a.product_publish = 'Y'
+					order by a.product_id desc
+					limit 1 ";
+			$db->setQuery ( $q );
+			$row_product = $db->loadObject ();
+			if ($row_product){ //у категории есть продукт с картинкой 
+				$item = new stdClass();
+				$item->category_id = $row->category_id;
+				$item->category_full_image = $row_product->product_full_image;
+				$item->category_thumb_image = $row_product->product_thumb_image;
+				$db->updateObject( '#__vm_category', $item, 'category_id' );
+				
+			}
+		}
+		
+	  
+}
+
 
 # Создание дерева групп
 /**

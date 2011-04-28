@@ -78,5 +78,18 @@ while ($row =  mysql_fetch_array($rows)){
 		$db_my->update_status('5', $row['product_id']);
 		
 		}//это группа
-}		
+}
+
+
+
+
+// добавим картинку к группам из товара 
+
+
+
+
+
+
+
+
 ?>
