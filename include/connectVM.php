@@ -658,9 +658,32 @@ function vm_set_group_img() {
 				$item->category_thumb_image = $row_product->product_thumb_image;
 				$db->updateObject( '#__vm_category', $item, 'category_id' );
 				
+			}else {//у категории нет продукта, берем из подчиненной категории
+				
+			$sql = "SELECT a.* FROM jos_vm_category a\n"
+		    . "left join jos_vm_category_xref b ON a.category_id=b.category_child_id\n"
+		    . "where \n"
+		    . "a.category_publish = 'Y'\n"
+		    . "and a.category_thumb_image <>''\n"
+		    . "and a.category_full_image <>''\n"
+		    . "and a.category_thumb_image is not null\n"
+		    . "and a.category_full_image is not null\n"
+		    . "and b.category_parent_id = ".$row->category_id."  \n"
+		    . "limit 1\n"
+		    . "";
+		    $db->setQuery ( $sql);
+		    $row_cat = $db->loadObject ();
+		    if ($row_cat){
+		    	$item = new stdClass();
+				$item->category_id = $row->category_id;
+				$item->category_full_image = $row_cat->category_full_image;
+				$item->category_thumb_image = $row_cat->category_thumb_image;
+				$db->updateObject( '#__vm_category', $item, 'category_id' );
+		    }
 			}
 		}
 		
+
 	  
 }
 
