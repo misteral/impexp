@@ -3,9 +3,10 @@
 //******************************** качаем каталог *********************************************************
 $url = TARGET.CATALOG;
 $file = CPATH_BASE.DS."catalog.html";
-if (file_exists($file) and filesize($file)){$creation_date = date ("d.m.y", filemtime($file));}//else{$creation_date = 0;}
-$today = date("d.m.y"); 
-$diff = $today - $creation_date;
+if (file_exists($file) and filesize($file)){
+	$creation_date = filemtime($file);
+	$diff=max(round((time() - $creation_date)/(24*60*60)),1);
+}else{$diff = 10000;}
 if ($diff>DIF_DATE){ //разница в днях есть качать 
 	$res = $pars->get_1251_to_UTF($url, $file, _TRY);
 	if ($res <> 'ok'){
@@ -15,7 +16,7 @@ if ($diff>DIF_DATE){ //разница в днях есть качать
 	$o->add('Каталог закачан');
 	}//else файла нет
 }else{
-	$o->add('Файл существует и он не старее одного дня');
+	$o->add('Файл существует и он не старее '.DIF_DATE.' дней');
 } 
 
 
@@ -109,13 +110,21 @@ foreach ($rows as $value){
 		$url = TARGET.$url;
 		$file = CPATH_BASE.DS.$sku.'_'.$dop.'.html';
 		//если есть отправка на wget ничего не качаем
-		if ($wget){file_put_contents(WGET, $url."\r\n", FILE_TEXT|FILE_APPEND); $db_my->update_status(1, $value->product_id); continue;}
 		
-	
-		if (file_exists($file) and filesize($file)){$creation_date = date ("d.m.y", filemtime($file));}//else{$creation_date = 0;}
-			$today = date("d.m.y");
-			$diff = $today - $creation_date; 
+		if (file_exists($file) and filesize($file)){
+			$creation_date = filemtime($file);
+			$diff=max(round((time() - $creation_date)/(24*60*60)),1);
+		}else{$diff = 10000;}
 			if ($diff>DIF_DATE){ //разница в днях меньше допустимой 
+				if (MULTY){
+					$urls[] = $url.';'.$file;
+					$db_my->update_status(1, $value->product_id);
+					continue;}
+				if ($wget){
+					file_put_contents(WGET, $url."\r\n", FILE_TEXT|FILE_APPEND); 
+					$db_my->update_status(1, $value->product_id);
+					 continue;}
+				//просто качаем файл 
 				$res = $pars->get_1251_to_UTF($url, $file, _TRY);
 				if ($res <> 'ok'){
 					$o->add('!!!!!!!!!Немогу скачать категорию '. $value->product_name);
@@ -132,5 +141,7 @@ foreach ($rows as $value){
 	}
 		
 }		
-
+if (MULTY) { //качаем мультиком
+	$pars->multiget_to_utf($urls);
+}
 ?>

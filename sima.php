@@ -17,6 +17,7 @@ define ( '_TRY', 3); 													//количество попыток зака
 define ( 'DIF_DATE', '3'); 												//количество дней на устаревание
 define ( 'WGET_BASE', 'c:' . DS.'wget'.DS.'bin' );						//бинарник wget 
 define ( 'WGET_FILE', 'wget.sima-images' );								//файл источник для wget
+define ( 'MULTY', true);												//флаг если качаем через мульти
 //define ( 'IMAGE_BASE', dirname ( __FILE__ ) . DS.'images' );
 define ( 'VM_IMAGE',dirname(dirname ( __FILE__ )).DS.'components'.DS.'com_virtuemart'.DS.'shop_image'.DS.'product');
 
@@ -57,10 +58,10 @@ include('include/sima-img-kach.php');
 include('include/sima-logo.php');
 
 
-$db_my->del_null_cat();
+$db_my->del_null_cat(); //уберем пустые категории
 //выгружаем все в virtuemart
 include('include/sima-uploadbase.php');
 
-vm_set_group_img();
+vm_set_group_img(); //установим картинки на группы
 
 ?>
