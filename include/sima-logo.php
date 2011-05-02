@@ -4,7 +4,7 @@ $o->add('Добавляем наши логотипы ресайзим и пер
 $c = 0;
 $cat = scandir(IMAGE_BASE);
 foreach ($cat as $file){
-if ($file =='.' or $file =='..' or !filesize($file)){continue;}
+if ($file =='.' or $file =='..' or !filesize(IMAGE_BASE.DS.$file)){continue;}
 $file_500 = VM_IMAGE.DS.VENDOR.'_500_'.$file;
 $file_90 = VM_IMAGE.DS.'resized'.DS.VENDOR.'_90_'.$file;
 $logo_file = IMAGE_BASE.DS.'logo_'.$file;

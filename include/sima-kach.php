@@ -125,7 +125,7 @@ foreach ($rows as $value){
 						}//else файла нет
 			}else{
 				$o->add('Файл  существует и он не старее заданных параметров');
-				//$db_my->update_status(1, $value->product_id);	
+				$db_my->update_status(1, $value->product_id);	
 			} 
 	}else{ //не качаем если статус 3
 		$o->add('Пропускаем группу '.$value->product_name);	

@@ -2,6 +2,8 @@
 ini_set ( 'max_execution_time', 0);// убираем ограничение по времени;
 ini_set ( 'max_input_time', 0); //
 set_time_limit (0);
+//ini_set ( 'display_errors', '1' );
+//error_reporting ( E_ALL );
 
 define ( '_JEXEC', 1 ); 												//флаг исполнения для классов джумлы	
 define ( 'DS', DIRECTORY_SEPARATOR );					
@@ -12,7 +14,7 @@ define ( 'TARGET', 'http://sima-land.ru' );								//url сайта
 define ( 'CATALOG','/catalog.html'); 									//url каталога
 define ( 'VENDOR','1' ); 												//вендор сима
 define ( '_TRY', 3); 													//количество попыток закачки
-define ( 'DIF_DATE', '7'); 												//количество дней на устаревание
+define ( 'DIF_DATE', '3'); 												//количество дней на устаревание
 define ( 'WGET_BASE', 'c:' . DS.'wget'.DS.'bin' );						//бинарник wget 
 define ( 'WGET_FILE', 'wget.sima-images' );								//файл источник для wget
 //define ( 'IMAGE_BASE', dirname ( __FILE__ ) . DS.'images' );
@@ -23,7 +25,7 @@ include	('include/simple_html_dom.php');
 include ('include/connectVM.php');
 
 $db_my  = new ex_Mysql();
-//$db->clear(1); //почистим базу
+$db_my->clear(); //почистим базу
 $pars = new parse();
 $o = new output('sima');
 $o->echo = false;
@@ -33,31 +35,31 @@ $manufacturer = 'sima-land';
 
 $wget = FALSE;
 
-if (file_exists(WGET)){unlink(WGET);}
+if (file_exists(WGET_FILE)){unlink(WGET_FILE);}
 
 //$pars->proxy = '67.205.68.11:8080';
-$pars->proxy = '10.44.33.88:8118';
-$pars->sleep = '5';
+//$pars->proxy = '10.44.33.88:8118';
+//$pars->sleep = '5';
 //$pars->try = 3;
 
 
 //качаем и обрабатываем каталог
-//include('include/sima-kach.php');
+include('include/sima-kach.php');
 
 //обрабатываем категрии с товаром
-//include('include/sima-parser-cat.php');
+include('include/sima-parser-cat.php');
 
 //качаем картинки
 //$wget = true;
-//include('include/sima-img-kach.php');
+include('include/sima-img-kach.php');
 
 //добавляем логотип переносим в нужный каталог
-//include('include/sima-logo.php');
+include('include/sima-logo.php');
 
 
-//$db_my->del_null_cat();
+$db_my->del_null_cat();
 //выгружаем все в virtuemart
-//include('include/sima-uploadbase.php');
+include('include/sima-uploadbase.php');
 
 vm_set_group_img();
 

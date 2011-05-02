@@ -52,10 +52,10 @@ class ex_Mysql {
 		echo " ( Not connected  MY SQL DB ) ";
 		$output=sprintf("Not connected  MY SQL DB",$output);
 		};
-		$res = @mysql_query("SET NAMES utf8",$this->db);
+		$res = mysql_query("SET NAMES utf8",$this->db);
 	}
 	private function query($q){
-		$res = @mysql_query($q,$this->db);
+		$res = mysql_query($q,$this->db);
 		if(!$res){
 			echo "Ошибка MYSQL говорит:", mysql_error();
 			exit;
@@ -63,7 +63,7 @@ class ex_Mysql {
 		else{ return $res;}
 	}
 	private function query_arr($q){
-		$res = @mysql_query($q,$this->db);
+		$res = mysql_query($q,$this->db);
 		if(!$res){
 			echo "Ошибка MYSQL говорит:", mysql_error();
 			exit;
@@ -185,7 +185,7 @@ class ex_Mysql {
 	 * @param unknown_type $product_vendor
 	 */
 	function clear($product_vendor = 0){
-		if($product_vendor_id){
+		if($product_vendor){
 			$q= 'delete from jos_al_import where product_vendor ='.$product_vendor.';';
 		}
 		else{$q = 'truncate jos_al_import;';}
@@ -237,7 +237,6 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 	    $c->product_parent_id= $row['product_parent_id'];         
 	    $c->product_sku= $row['product_sku'];                 
 	    $c->product_desc = $row['product_desc'];               
-	    $c->product_thumb_image = $row['product_thumb_image'];        
 	    $c->product_full_image= $row['product_full_image'];          
 	    $c->product_url = $row['product_url'];                
 	    $c->product_name = $row['product_name'];              
