@@ -58,7 +58,7 @@ while ($row =  mysql_fetch_array($rows)){
 		if ($product_id){//есть такой товар
 			vm_set_publish($product_id); //установим флаг publish
 			$product_price = round ($row['product_price']*$row['product_margin']);
-			vm_update_image($product_id, $product_full_image, $product_thumb_image); // обновим картинку
+			vm_update_image($product_id, $product_full_image, $product_thumb_image,$row['product_desc']); // обновим картинку и desc
 			vm_newProduct_price($product_id,$product_price); //установим цену
 			
 		}//есть такой товар

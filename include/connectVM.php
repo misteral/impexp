@@ -506,19 +506,25 @@ function vm_get_id($product_name,$product_sku) {
 }
 
 /**
- * Обновляем картинку у продукта
+ * Обновляем картинку у продукта и desc
  * @param unknown_type $product_id
  * @param unknown_type $product_full_image
  * @param unknown_type $product_thumb_image
  */
-function vm_update_image($product_id, $product_full_image, $product_thumb_image) {
+function vm_update_image($product_id, $product_full_image, $product_thumb_image,$desc) {
 	global $db;	
 	$item = new stdClass();
 	$item->product_id = $product_id;
 	$item->product_full_image = $product_full_image;
 	$item->product_thumb_image = $product_thumb_image;
+	$item->product_desc = $desc;
+	$item->product_s_desc = $desc;
 	$db->updateObject( '#__vm_product', $item, '$product_id' );
 }
+
+
+
+
 
 /**
  *Берет ид из vm_category по наименованиею и парент ID
