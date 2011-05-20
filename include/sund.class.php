@@ -982,7 +982,7 @@ class output  {
 	function add($txt) {
 		//$this->arr[]=($txt."\r\n"); 
 		 $line  = '['.date('H:i:s').'] ';
-        $line .= $txt."\r\n";;
+        $line .= $txt."\r\n";
         
 		if ($this->echo){echo ($txt);	}
          file_put_contents($this->file, $line, FILE_APPEND );

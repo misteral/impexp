@@ -1,12 +1,17 @@
 ﻿<?php
-
-$cfg_name    = "Интернет-магазин ненужных вещей"; // Название Вашего магазина
-$cfg_company = "Василий Пупкин и Партнеры";         // Название компании - владельца
-$cfg_url     = "http://vasa-pupkin.ru";                         // URL корня сайта
+$cfg_name    = "Сувенирная лавка Сундучок"; // Название Вашего магазина
+$cfg_company = "ИП Бобров А.В.";         // Название компании - владельца
+$cfg_url     = "http://www.e-sunduchok.ru";                         // URL корня сайта
 $cfg_delivery= "true";                                              // Возможность доставки
-$cfg_delivery_cost = "300";                                      // Стоимость доставки
+$cfg_delivery_cost = "100";                                      // Стоимость доставки
 $cfg_currency= "RUR";                                             // Валюта в которой указаны Ваши цены
-$cfg_sales_notes= "Доставка в пределах МКАД";        //  Общие замечания о доставке
+$cfg_sales_notes= "Доставка до транспортной компании";        //  Общие замечания о доставке
+
+
+$file  = 'e-sunduchok_ru.yml';
+if (file_exists($file)){unlink($file);}
+
+
 //==============================================
 include '../configuration.php';
 $cfg = new JConfig();
@@ -20,25 +25,27 @@ $userstable = "jos_vm_product";
 $pricetable = "jos_vm_product_price";
 $product_category_xref =  "jos_vm_product_category_xref";
 
+
+
 mysql_connect($hostname,$username,$password) OR DIE("Не могу создать соединение "); 
 mysql_select_db($dbName) or die(mysql_error());
 mysql_query('set names utf8'); 
 
-echo "<?xml version='1.0' encoding='UTF-8'?>\n";
-echo "<!DOCTYPE yml_catalog SYSTEM 'shops.dtd'>\n";
-echo "<yml_catalog date=\"".date('Y-m-d H:i')."\">\n"; 
-echo "<shop>\n";
-echo "<name>".$cfg_name."</name>\n";
-echo "<company>".$cfg_company."</company>\n";
-echo "<url>".$cfg_url."</url>\n";
+add ("<?xml version='1.0' encoding='UTF-8'?>\n");
+add ( "<!DOCTYPE yml_catalog SYSTEM 'shops.dtd'>\n");
+add ( "<yml_catalog date=\"".date('Y-m-d H:i')."\">\n"); 
+add ( "<shop>\n");
+add ( "<name>".$cfg_name."</name>\n");
+add ( "<company>".$cfg_company."</company>\n");
+add ( "<url>".$cfg_url."</url>\n");
 
-echo "<currencies>\n";
-echo "<currency  id=\"RUR\" rate=\"1\"/>\n";
-echo "<currency  id=\"USD\" rate=\"CBRF\"/>\n";
-echo "<currency  id=\"EUR\" rate=\"CBRF\"/>\n";
-echo "</currencies>\n";
+add ( "<currencies>\n");
+add ( "<currency  id=\"RUR\" rate=\"1\"/>\n");
+add ( "<currency  id=\"USD\" rate=\"CBRF\"/>\n");
+add ( "<currency  id=\"EUR\" rate=\"CBRF\"/>\n");
+add ( "</currencies>\n");
 
-echo "<categories>\n";
+add ( "<categories>\n");
 $query_cat = "SELECT * FROM $category_xref"; 
 $res_cat = mysql_query($query_cat) or die(mysql_error()); 
 $rw=1; 
@@ -52,17 +59,17 @@ $cat_name=$name_cat['category_name'];
 
 if ($cat_name) {
 if ($cat_parent_id==0) {
-echo "<category id=\"".$cat_child_id."\">".$cat_name."</category>\n";
+add ( "<category id=\"".$cat_child_id."\">".$cat_name."</category>\n");
 }
 else {            
-echo "<category id=\"".$cat_child_id."\" parentId=\"".$cat_parent_id."\">".$cat_name."</category>\n";
+add ( "<category id=\"".$cat_child_id."\" parentId=\"".$cat_parent_id."\">".$cat_name."</category>\n");
 }
 }
 $rw++;
 }
 
-echo"</categories>\n";
-echo"<offers>\n";
+add ("</categories>\n");
+add ("<offers>\n");
 
 $tb_product             = $cfg->dbprefix."vm_product";
 $tb_manufacturer        = $cfg->dbprefix."vm_manufacturer";
@@ -117,27 +124,27 @@ $product_sku=$row[$i]['product_sku'];
 $category_name=$row[$i]['category_name'];
 $mf_name=$row[$i]['mf_name'];
 
-echo"\n<offer id=\"".$row[$i]['product_id']."\" available=\"true\" >\n";
-echo"<url>".$url."</url>\n";
-echo"<price>".$product_price."</price>\n";
-echo"<currencyId>".$cfg_currency."</currencyId>\n";       
-echo"<categoryId>".$product_cat_id."</categoryId>\n";
-echo"<picture>".$product_thumb_image."</picture>\n";
-echo"<delivery>".$cfg_delivery."</delivery> \n"; 
-echo"<local_delivery_cost>".$cfg_delivery_cost."</local_delivery_cost> \n";
-echo "<name>";
-echo HtmlSpecialChars(strip_tags($row[$i]['product_name']));
-echo "</name>\n";
-echo"<vendor>".$mf_name."</vendor>\n";
-echo"<vendorCode>".HtmlSpecialChars($product_sku)."</vendorCode>\n";
-echo"<description>".HtmlSpecialChars($desc)."</description>\n";
-echo "<sales_notes>".$cfg_sales_notes."</sales_notes> \n";
-echo"</offer>\n";
+add ("\n<offer id=\"".$row[$i]['product_id']."\" available=\"true\" >\n");
+add ("<url>".$url."</url>\n");
+add ("<price>".$product_price."</price>\n");
+add ("<currencyId>".$cfg_currency."</currencyId>\n");       
+add ("<categoryId>".$product_cat_id."</categoryId>\n");
+add ("<picture>".$product_thumb_image."</picture>\n");
+add ("<delivery>".$cfg_delivery."</delivery> \n"); 
+add ("<local_delivery_cost>".$cfg_delivery_cost."</local_delivery_cost> \n");
+add ( "<name>");
+add ( HtmlSpecialChars(strip_tags($row[$i]['product_name'])));
+add ( "</name>\n");
+add ("<vendor>".$mf_name."</vendor>\n");
+add ("<vendorCode>".HtmlSpecialChars($product_sku)."</vendorCode>\n");
+add ("<description>".HtmlSpecialChars($desc)."</description>\n");
+add ( "<sales_notes>".$cfg_sales_notes."</sales_notes> \n");
+add ("</offer>\n");
 }
 }
-echo"</offers>\n";
-echo"</shop>\n";
-echo"</yml_catalog>\n";
+add ("</offers>\n");
+add ("</shop>\n");
+add ("</yml_catalog>\n");
 function d2a($query){
 
 $result = mysql_query($query) or die("Query failed : " . mysql_error());
@@ -148,5 +155,10 @@ return $res;
 
 }
 
+function add($txt){
+	global $file;	
+	//$line = $txt."\r\n";
+ 	file_put_contents($file, $txt, FILE_APPEND );
+}
 
 ?>
