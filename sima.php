@@ -14,7 +14,7 @@ define ( 'TARGET', 'http://sima-land.ru' );								//url сайта
 define ( 'CATALOG','/catalog.html'); 									//url каталога
 define ( 'VENDOR','1' ); 												//вендор сима
 define ( '_TRY', 3); 													//количество попыток закачки
-define ( 'DIF_DATE', '3'); 												//количество дней на устаревание
+define ( 'DIF_DATE', '4'); 												//количество дней на устаревание
 define ( 'WGET_BASE', 'c:' . DS.'wget'.DS.'bin' );						//бинарник wget 
 define ( 'WGET_FILE', 'wget.sima-images' );								//файл источник для wget
 define ( 'MULTY', true);												//флаг если качаем через мульти
@@ -26,7 +26,7 @@ include	('include/simple_html_dom.php');
 include ('include/connectVM.php');
 
 $db_my  = new ex_Mysql();
-$db_my->clear(); //почистим базу
+
 $pars = new parse();
 $o = new output('sima');
 $o->echo = false;

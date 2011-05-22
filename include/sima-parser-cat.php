@@ -41,8 +41,8 @@ if ($value->product_status==1){//не обрабатываем если не с�
 			// обработаем количество в наборе. 
 			if (!$skip){$look= $o->chk($el1->getElementByTagName('td.item-list-package div'),'');}
 			if (!$skip){$nabor = $o->ch($look->text(),'Ссылка пустая у '.$item->product_name);
-			preg_match('|.*\((.*)\)|Uis', $nabor, $matches);
-			$desk3=trim($matches[1]); 
+			preg_match('|.*наборе (.*) шт\).*|Uis', $nabor, $matches);
+			if (trim($matches[1])){ $desk3='в наборе '.trim($matches[1]).' шт.';} 
 			}
 			
 			

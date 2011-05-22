@@ -9,6 +9,7 @@
 $manufacturer_ID = vendor_create($manufacturer); //создаем или берем cуществующий ид производителя
 
 vm_unpublish_product_mnf(); // снимаем с публикации все данного mnf
+vm_unpublish_category(); //Снимаем с публикации все пустые категории
 
 //vm_product_notpublish_if_not_updated(); //опасная функция !!! not publish если товара нет такого в обновке с симы
 
@@ -88,7 +89,7 @@ while ($row =  mysql_fetch_array($rows)){
 
 
 
-
+vm_unpublish_category(); //Снимаем с публикации все пустые категории еще раз
 // добавим картинку к группам из товара 
 
 

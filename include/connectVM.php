@@ -329,7 +329,7 @@ function newCategory($category_name, $category_description = '') {
 	$ins = new stdClass ();
 	$ins->category_id = NULL;
 	$ins->category_name = $category_name;
-	$ins->category_description = $category_description;
+	$ins->category_description = $category_name;
 	$ins->vendor_id = $vendor_ID;
 	$ins->category_publish = 'Y';
 	$ins->category_browsepage = 'browse_3';
@@ -524,8 +524,6 @@ function vm_update_image($product_id, $product_full_image, $product_thumb_image,
 
 
 
-
-
 /**
  *Берет ид из vm_category по наименованиею и парент ID
  *$product_name
@@ -572,15 +570,46 @@ function vm_get_category_id_name($category_name,$parent_name) {
 
 
 /**
- * Снимает с публикации категорию
+ * Снимаетс публикации категории если у нее нет деток и убирает с нее все зависимости
  * @todo сделать функцию 
  */
-function vm_unpublish_category_mnf() {
+function vm_unpublish_category() {
 	global $db;
 	global $manufacturer_ID;
+	// сначала ууюерем подкатегории
+    $sql = "update #__vm_category"
+    . " set category_publish = 'N'"
+    . " where category_id not in (select category_id from #__vm_product_category_xref)"
+    . " and category_id not in (select category_child_id from #__vm_category_xref where category_parent_id = 0)"
+    . "";
+	$db->setQuery ($sql);
+	$db->query();
+	
+	//удалим связи у неопубликованных категорий
+	$sql = "delete from #__vm_category_xref where category_child_id in"
+    . " (select category_id from #__vm_category where category_publish = 'N')";
+    $db->setQuery ($sql);
+	$db->query();
+	
+	//займемся головными
+	$sql = "update #__vm_category"
+    . " set category_publish = 'N'"
+    . " where category_id not in (select category_id from #__vm_product_category_xref)"
+    . " and category_id in (select category_child_id from #__vm_category_xref where category_parent_id = 0)"
+    . " and category_id not in (select category_parent_id from #__vm_category_xref)"
+    . "";
+    $db->setQuery ($sql);
+	$db->query();
+    
+	//удалим связи у неопубликованных категорий
+	$sql = "delete from #__vm_category_xref where category_child_id in"
+    . " (select category_id from #__vm_category where category_publish = 'N')";
+    $db->setQuery ($sql);
+	$db->query();
+
 }
 /**
- * снимает с публикации всю продукция в контексте данного mnf
+ * снимает с публикации всю продукция в контексте данного mnf и отвязывает от групп
  */
 function vm_unpublish_product_mnf() {
 	global $db;
@@ -589,8 +618,15 @@ function vm_unpublish_product_mnf() {
 	set a.product_publish = 'N' 
 	where b.manufacturer_id = ".$manufacturer_ID." and b.product_id = a.product_id";
 	$db->setQuery ($q);
-	$db->query ();
+	$db->query();
+	$sql = "delete a from #__vm_product_category_xref a,#__vm_product_mf_xref b\n"
+    . "where a.product_id = b.product_id \n"
+    . "and b.manufacturer_id = ".$manufacturer_ID;
+    $db->setQuery ($sql);
+	$db->query();
 }
+
+
 
 /**
  * Устанавливает publish на продукт $product_id
@@ -603,12 +639,15 @@ function vm_set_publish($product_id) {
 }
 
 /**
- * Снимаем с публикации
+ * Снимаем с публикации убираем с категорий
  * @param  $product_id
  */
 function vm_set_unpublish ($product_id){
 	global $db;
 	$q = "update #__vm_product set product_publish = 'N' where product_id = '".$product_id."'";
+	$db->setQuery ($q);
+	$db->query ();
+	$q = "delete #__vm_product_category_xref where product_id = ".$product_id;
 	$db->setQuery ($q);
 	$db->query ();
 }
