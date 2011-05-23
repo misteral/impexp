@@ -391,7 +391,8 @@ CREATE TABLE IF NOT EXISTS jos_al_import (
 		return $res;
 	} //_get_product($id)
 
-	function del_null_cat() {
+	
+	function del_null_cat_nouse() {
 		//идем сверху вниз на 3 уровня
 		$q0 = 'select * from jos_al_import where product_parent_id = 0 and product_isgroup = true';
 		$res0 = $this->query($q0);

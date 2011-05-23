@@ -72,8 +72,9 @@ if ($value->product_status==1){//не обрабатываем если не с�
 				if ($desk2 and $desk1){$desk2 = $desk2.',';}
 					$item->product_desc =trim($desk2).' '.trim($desk1);
 				if ($desk3){
-					$item->product_desc	 = $item->product_desc.', '.$desk3;
+					$item->product_desc	 = $item->product_desc.' '.$desk3;
 				}
+				unset($desk1);
 				$item->product_ed = trim($item->product_ed);
 				$item->product_min =trim($item->product_min);
 				$item->product_ost = trim($item->product_ost);
@@ -91,8 +92,9 @@ if ($value->product_status==1){//не обрабатываем если не с�
 				$db_my->count_inc('skip');
 				$skip = false;
 				}
-			
-	
+			unset($desk1);
+			unset($desk2);
+			unset($desk3);	
 			//$db_my->update_status (2, $db_my->last_id());
 		//exit();
 	}//цикл по строкам таблицы
@@ -124,7 +126,7 @@ $o->add('-----------------------------------------------------------------------
 
 
 // ********************   Удалим пустые группы    ****************************
-$db_my->del_null_cat();
+//$db_my->del_null_cat();
 
 
 ?>

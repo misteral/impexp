@@ -39,29 +39,27 @@ $wget = FALSE;
 if (file_exists(WGET_FILE)){unlink(WGET_FILE);}
 
 //$pars->proxy = '67.205.68.11:8080';
-//$pars->proxy = '10.44.33.88:8118';
+$pars->proxy = '10.44.33.88:8118';
 //$pars->sleep = '5';
 //$pars->try = 3;
 
 
 //качаем и обрабатываем каталог
-include('include/sima-kach.php');
+//include('include/sima-kach.php');
 
 //обрабатываем категрии с товаром
-include('include/sima-parser-cat.php');
+//include('include/sima-parser-cat.php');
 
 //качаем картинки
 //$wget = true;
-include('include/sima-img-kach.php');
+//include('include/sima-img-kach.php');
 
 //добавляем логотип переносим в нужный каталог
-include('include/sima-logo.php');
+//include('include/sima-logo.php');
 
 
-$db_my->del_null_cat(); //уберем пустые категории
 //выгружаем все в virtuemart
 include('include/sima-uploadbase.php');
 
-vm_set_group_img(); //установим картинки на группы
 
 ?>

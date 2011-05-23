@@ -6,10 +6,12 @@
 //сменим image full path al
 //$db->setQuery ( "SELECT category_id FROM #__vm_category where category_name = '" . $name . "'" );
 
+ClearBase(1);
+
 $manufacturer_ID = vendor_create($manufacturer); //создаем или берем cуществующий ид производителя
 
 vm_unpublish_product_mnf(); // снимаем с публикации все данного mnf
-vm_unpublish_category(); //Снимаем с публикации все пустые категории
+vm_delete_category(); //Удаляет все пустые категории
 
 //vm_product_notpublish_if_not_updated(); //опасная функция !!! not publish если товара нет такого в обновке с симы
 
@@ -20,8 +22,9 @@ while ($row =  mysql_fetch_array($rows)){
 		$pcat_id =vm_get_category_id($row['product_name'], 0);
 		if (!$pcat_id){ //создадим новую
 			$pcat_id=newCategory($row['product_name']);
-			newGroups_xref(0,$pcat_id);
-		}//создадим новую
+			newGroups_xref(0,$pcat_id);}//создадим новую
+		else {vm_set_publish_category($pcat_id);}
+		
 		
 		$db_my->update_status('5', $pcat_id);
 	}
@@ -41,6 +44,8 @@ while ($row =  mysql_fetch_array($rows)){
 			$pcat_id=newCategory($row['product_name'],'');
 			newGroups_xref($parent_id,$pcat_id);
 		}//создадим новую
+		else {vm_set_publish_category($pcat_id);}
+		
 		$db_my->update_status('5', $pcat_id);
 	}
 }
@@ -89,11 +94,10 @@ while ($row =  mysql_fetch_array($rows)){
 
 
 
-vm_unpublish_category(); //Снимаем с публикации все пустые категории еще раз
+vm_delete_category(); //Удаляет все пустые категории еще раз
 // добавим картинку к группам из товара 
 
-
-
+vm_set_group_img(); //установим картинки на группы
 
 
 
