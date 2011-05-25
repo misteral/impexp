@@ -18,7 +18,7 @@ if (!file_exists($file_500) or !file_exists($file_90)) {
 	unlink($logo_file);
 	++$c;
 }
-
+unlink($file);
 //exit;
 }
 
