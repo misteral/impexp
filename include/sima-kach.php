@@ -142,6 +142,8 @@ foreach ($rows as $value){
 		
 }		
 if (MULTY) { //качаем мультиком
-	$pars->multiget_to_utf($urls);
+	$urls = $pars->multiget_to_utf($urls);
+	//Пробуем еще раз
+	$urls = $pars->multiget_to_utf($urls);
 }
 ?>

@@ -668,6 +668,7 @@ public  $product_ost;
  * Класс закачки через курл и соранения файлов  
  * @author BobrovAV
  *
+ *return не скачанные urls$
  */
 class parse {
 	public $sleep=5;
@@ -701,8 +702,9 @@ class parse {
 	"Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.8.1.9) Gecko/20071025 Firefox/2.0.0.9"
 	);
 
-function multiget_to_utf($urls)
+function multiget_to_utf($urls) 
 {
+	global $o;
 	$threads = $this->threads;
 	$useragent = $this->all_useragents[array_rand($this->all_useragents)];
 
@@ -711,6 +713,7 @@ function multiget_to_utf($urls)
 	{
 		$urls_pack[] = array_slice($urls, $i, $threads);
 	}
+	unset ($urls);
 	foreach($urls_pack as $pack)
 	{
 		$mh = curl_multi_init(); unset($conn);
@@ -719,27 +722,33 @@ function multiget_to_utf($urls)
 	    	$url = explode(';', $url);
 	    	$url = $url[0];
 			$conn[$i]=curl_init(trim($url));
-			curl_setopt($conn[$i],CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($conn[$i],CURLOPT_TIMEOUT, $this->timeout);
-			curl_setopt($conn[$i],CURLOPT_USERAGENT, $useragent);
+			curl_setopt($conn[$i], CURLOPT_MAXREDIRS, 10 );
+			curl_setopt($conn[$i], CURLOPT_FOLLOWLOCATION, true );
+			curl_setopt($conn[$i], CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($conn[$i], CURLOPT_TIMEOUT, $this->timeout);
+			curl_setopt($conn[$i], CURLOPT_USERAGENT, $useragent);
 			curl_multi_add_handle ($mh,$conn[$i]);
 		}
 		do { $n=curl_multi_exec($mh,$active); usleep(100); } while ($active);
 		foreach ($pack as $i => $url)
 		{
-      		$res = curl_multi_getcontent($conn[$i]);
+      		
+			$url = explode(';', $url);
+			$res = curl_multi_getcontent($conn[$i]);
       		if ($res){
-      		$url = explode(';', $url);
-	    	$target_file = $url[1];
+      		$target_file = $url[1];
       		$res = mb_convert_encoding($res,'UTF8', "CP1251");
       		$res = $this->save($target_file, $res);
+      		}
+      		else{
+      			$urls[] = $url[0].';'.$url[1]; //запишем не скачанные
       		}
       		curl_close($conn[$i]);
       		
 		}
 curl_multi_close($mh);
 	}
-
+return $urls;
 }
 	
 	

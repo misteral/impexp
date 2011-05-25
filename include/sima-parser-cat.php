@@ -9,7 +9,7 @@ if ($value->product_status==1){//не обрабатываем если не с�
 	$dop = 1;
 	$id = $value->product_id;
 	$sku = $value->product_sku;
-	$o->add('Начинаем обработку категории '.$value->product_name.'. Файл='.$id.'_'.$dop.'.html');
+	$o->add('Начинаем обработку категории '.$value->product_name.'. Файл='.$sku.'_'.$dop.'.html');
 	$file = CPATH_BASE.DS.$sku.'_'.$dop.'.html';
 	if (!file_exists($file) or !filesize($file)){$o->add('Отсутствует файл категории');continue;}
 	$document = file_get_html($file);

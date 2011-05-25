@@ -182,14 +182,14 @@ function ClearBase($change) {
 		$db->query ();
 
 		# Чистим таблицу произодителей
-		$query = 'DELETE FROM #__vm_manufacturer';
-		$db->setQuery ( $query );
-		$db->query ();
+		//$query = 'DELETE FROM #__vm_manufacturer';
+		//$db->setQuery ( $query );
+		//$db->query ();
 
 		# Чистим таблицу групп произодителей
-		$query = 'DELETE FROM #__vm_manufacturer_category';
-		$db->setQuery ( $query );
-		$db->query ();
+		//$query = 'DELETE FROM #__vm_manufacturer_category';
+		//$db->setQuery ( $query );
+		//$db->query ();
 
 
 
@@ -235,20 +235,7 @@ function ClearBase($change) {
 		$db->setQuery ( $query );
 	}
 }
-# Очистка таблиц в базе
-function ClearBase2($change) {
-	global $db;
-	if ($change == 1) {
-		$query = 'DELETE FROM #__vm_product_price';
-		$db->setQuery ( $query );
-		$db->query ();
-		$query = 'DELETE FROM #__vm_product_product_type_xref';
-		$db->setQuery ( $query );
-		$db->query ();
-		$query = 'DELETE FROM #__vm_tax_rate';
-		$db->setQuery ( $query );
-	}
-}
+
 # Пишем свойста характеристик на товар
 function Write_product_attribute_sku()
 {
