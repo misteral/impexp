@@ -685,8 +685,8 @@ function vm_product_notpublish_if_not_updated(){
  */
 function vm_set_group_img() {
 	global $db;
-	$q = "select distinct a.category_id, a.category_name from jos_vm_category a
-			left join jos_vm_product_category_xref b on a.category_id = b.category_id
+	$q = "select distinct a.category_id, a.category_name from #__vm_category a
+			left join #__vm_product_category_xref b on a.category_id = b.category_id
 			where a.category_full_image = ''
 			or a.category_thumb_image = ''
 			or a.category_thumb_image is null
@@ -713,17 +713,16 @@ function vm_set_group_img() {
 				
 			}else {//у категории нет продукта, берем из подчиненной категории
 				
-			$sql = "SELECT a.* FROM jos_vm_category a\n"
-		    . "left join jos_vm_category_xref b ON a.category_id=b.category_child_id\n"
-		    . "where \n"
-		    . "a.category_publish = 'Y'\n"
-		    . "and a.category_thumb_image <>''\n"
-		    . "and a.category_full_image <>''\n"
-		    . "and a.category_thumb_image is not null\n"
-		    . "and a.category_full_image is not null\n"
-		    . "and b.category_parent_id = ".$row->category_id."  \n"
-		    . "limit 1\n"
-		    . "";
+			$sql = "SELECT a.* FROM #__vm_category a "
+		    ." left join #__vm_category_xref b ON a.category_id=b.category_child_id"
+		    ." where "
+		    ." a.category_publish = 'Y'"
+		    ." and a.category_thumb_image <>''"
+		    ." and a.category_full_image <>''"
+		    ." and a.category_thumb_image is not null"
+		    ." and a.category_full_image is not null"
+		    ." and b.category_parent_id = ".$row->category_id." limit 1";
+		    
 		    $db->setQuery ( $sql);
 		    $row_cat = $db->loadObject ();
 		    if ($row_cat){
