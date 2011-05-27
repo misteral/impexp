@@ -9,7 +9,7 @@ define ( '_JEXEC', 1 ); 												//флаг исполнения для кл�
 define ( 'DS', DIRECTORY_SEPARATOR );					
 define ( 'CPATH_BASE', dirname ( __FILE__ ) . DS.'dw-sima' );         	//куда файлы складываем
 define ( 'JPATH_BASE', dirname(dirname ( __FILE__ )) . '' ); 			//корень джумлы
-define ( 'IMAGE_BASE', JPATH_BASE.DS.'tmp'.DS.'site-images' );						//где картинки живут(оригиналы)
+define ( 'IMAGE_BASE', JPATH_BASE.DS.'tmp');						//где картинки живут(оригиналы)
 define ( 'TARGET', 'http://sima-land.ru' );								//url сайта 
 define ( 'CATALOG','/catalog.html'); 									//url каталога
 define ( 'VENDOR','1' ); 												//вендор сима
@@ -61,6 +61,7 @@ include('include/sima-logo.php');
 
 //выгружаем все в virtuemart
 include('include/sima-uploadbase.php');
+
 
 
 ?>
