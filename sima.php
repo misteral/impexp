@@ -34,6 +34,10 @@ $o->echo = false;
 
 //Проверим промзводителя и если нет создадим
 $manufacturer = 'sima-land';
+$manufacturer_ID = 1;
+#ID продавца, имя продавца, мое ID
+$vendor_ID = 1;
+
 
 $wget = FALSE;
 
