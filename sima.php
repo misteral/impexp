@@ -9,7 +9,7 @@ define ( '_JEXEC', 1 ); 												//флаг исполнения для кл�
 define ( 'DS', DIRECTORY_SEPARATOR );					
 define ( 'CPATH_BASE', dirname ( __FILE__ ) . DS.'dw-sima' );         	//куда файлы складываем
 define ( 'JPATH_BASE', dirname(dirname ( __FILE__ )) . '' ); 			//корень джумлы
-define ( 'IMAGE_BASE', JPATH_BASE.DS.'tmp');						//где картинки живут(оригиналы)
+//define ( 'IMAGE_BASE', JPATH_BASE.DS.'tmp');						//где картинки живут(оригиналы)
 define ( 'TARGET', 'http://sima-land.ru' );								//url сайта 
 define ( 'CATALOG','/catalog.html'); 									//url каталога
 define ( 'VENDOR','1' ); 												//вендор сима
@@ -18,7 +18,7 @@ define ( 'DIF_DATE', '3'); 												//количество дней на ус
 define ( 'WGET_BASE', 'c:' . DS.'wget'.DS.'bin' );						//бинарник wget 
 define ( 'WGET_FILE', 'wget.sima-images' );								//файл источник для wget
 define ( 'MULTY', true);												//флаг если качаем через мульти
-//define ( 'IMAGE_BASE', dirname ( __FILE__ ) . DS.'images' );
+define ( 'IMAGE_BASE', dirname ( __FILE__ ) . DS.'images' );
 define ( 'VM_IMAGE',dirname(dirname ( __FILE__ )).DS.'components'.DS.'com_virtuemart'.DS.'shop_image'.DS.'product');
 
 include ('include/sund.class.php');
@@ -46,10 +46,10 @@ if (file_exists(WGET_FILE)){unlink(WGET_FILE);}
 
 
 //качаем и обрабатываем каталог
-include('include/sima-kach.php');
+//include('include/sima-kach.php');
 
 //обрабатываем категрии с товаром
-include('include/sima-parser-cat.php');
+//include('include/sima-parser-cat.php');
 
 //качаем картинки
 //$wget = true;

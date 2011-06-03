@@ -41,7 +41,7 @@ class ex_Mysql {
     	$host = 'localhost';
 		$basename = 'sundmart';
 		$pass = '';
-		$this->db = @mysql_connect($host,$user,$pathword);
+		$this->db = @mysql_connect($host,$user,$pass);
 		if (!$this->db) 
 		{
 		echo " ( Not connected  MY SQL  ) ";
