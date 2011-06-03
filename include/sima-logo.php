@@ -5,8 +5,9 @@ $c = 0;
 $cat = scandir(IMAGE_BASE);
 foreach ($cat as $file){
 if ($file =='.' or $file =='..' or !filesize(IMAGE_BASE.DS.$file)){continue;}
-$file_500 = VM_IMAGE.DS.VENDOR.'_500_'.$file;
-$file_90 = VM_IMAGE.DS.'resized'.DS.VENDOR.'_90_'.$file;
+$FileInfo = pathinfo($file);
+$file_500 = VM_IMAGE.DS.'resized'.DS.VENDOR.'_'.$fileinfo['basename'].'_500x500'.$fileinfo['extension'];
+$file_90 = VM_IMAGE.DS.'resized'.DS.VENDOR.'_'.$fileinfo['basename'].'_90x90'.$fileinfo['extension'];
 $logo_file = IMAGE_BASE.DS.'logo_'.$file;
 $file = IMAGE_BASE.DS.$file;
 $logo = 'include/img - logo.png';
