@@ -15,13 +15,13 @@ class ex_Mysql {
 		'skip'=>0
 	); //названия счетчиков
 	
-    private $db;
+    private $dbr;
  	  
     public function __construct(){
         $this->connect();
     }
     function __destruct(){
-    	@mysql_close($this->db);
+    	@mysql_close($this->dbr);
     }
     /**
      *Значение счетчика итераций к базе
@@ -38,21 +38,21 @@ class ex_Mysql {
 	}
     private function connect() {
 		$user = 'root';
-    	$host = 'localhost';
+    	$host = '127.0.0.1';
 		$basename = 'sundmart';
 		$pass = '';
-		$this->db = @mysql_connect($host,$user,$pathword);
-		if (!$this->db) 
+		$this->dbr = mysql_connect($host,$user,$pathword);
+		if (!$this->dbr) 
 		{
 		echo " ( Not connected  MY SQL  ) ";
 		$output=sprintf("Not connected  MY SQL",$output);
 		};
-		if (!@mysql_select_db($basename,$this->db))
+		if (!@mysql_select_db($basename,$this->dbr))
 		{
 		echo " ( Not connected  MY SQL DB ) ";
 		$output=sprintf("Not connected  MY SQL DB",$output);
 		};
-		$res = mysql_query("SET NAMES utf8",$this->db);
+		$res = mysql_query("SET NAMES utf8",$this->dbr);
 	}
 	private function query($q){
 		$res = mysql_query($q,$this->db);

@@ -6,18 +6,54 @@
 //define ( 'JPATH_BASE_PICTURE', JPATH_BASE .DS.'components'.DS.'com_virtuemart'.DS.'shop_image'.DS.'product');
 # директория в которую записываются маленькие картинки
 //define ( 'JPATH_BASE_PICTURE_SMALL', JPATH_BASE_PICTURE .DS.'resized' );
+//define('_VALID_MOS', '1');
 
-require_once (JPATH_BASE . DS . 'includes' . DS . 'defines.php');
-require_once (JPATH_BASE . DS . 'includes' . DS . 'framework.php');
-require (JPATH_BASE .DS. 'libraries' .DS. 'joomla' .DS. 'factory.php');
-// initialize the application
-$mainframe = & JFactory::getApplication ( 'site' );
-$mainframe->initialise ();
-$db = & JFactory::getDBO ();
-//$session = $session = & JFactory::getSession ();
-jimport ( 'joomla.error.log' );
-jimport ( 'joomla.user.helper' );
-$log = &JLog::getInstance ( 'connectVM.log' );
+//require_once (JPATH_BASE . DS . 'includes' . DS . 'defines.php');
+
+$parts = explode( DS, JPATH_BASE );
+
+//Defines
+define( 'JPATH_ROOT',			implode( DS, $parts ) );
+define( 'JPATH_SITE',			JPATH_ROOT );
+define( 'JPATH_CONFIGURATION', 	JPATH_ROOT.DS.'remote_conf' );
+define( 'JPATH_ADMINISTRATOR', 	JPATH_ROOT.DS.'administrator' );
+define( 'JPATH_XMLRPC', 		JPATH_ROOT.DS.'xmlrpc' );
+define( 'JPATH_LIBRARIES',	 	JPATH_ROOT.DS.'libraries' );
+define( 'JPATH_PLUGINS',		JPATH_ROOT.DS.'plugins'   );
+define( 'JPATH_INSTALLATION',	JPATH_ROOT.DS.'installation' );
+define( 'JPATH_THEMES'	   ,	JPATH_BASE.DS.'templates' );
+define( 'JPATH_CACHE',			JPATH_BASE.DS.'cache');
+
+require_once ( JPATH_BASE .DS.'includes'.DS.'framework.php' );
+/* To use Joomla's Database Class */
+require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'factory.php' );
+/* Create the Application */
+$mainframe =& JFactory::getApplication('site');
+$db = JFactory::getDBO ();
+
+//jimport ( 'joomla.error.log' );
+//jimport ( 'joomla.user.helper' );
+$log = '';//&JLog::getInstance ( 'connectVM.log' );
+
+/**
+ *$option = array(); //prevent problems
+$option['driver']   = 'mysql';            // Database driver name
+$option['host']     = '127.0.0.1';    // Database host name
+$option['user']     = 'root';       // User for database authentication
+$option['password'] = '';   // Password for database authentication
+$option['database'] = 'sund_seo';      // Database name
+$option['prefix']   = 'jos_';             // Database prefix (may be empty)
+$db = nulll;
+$db = & JDatabase::getInstance( $option );
+ */
+
+
+//$db->setQuery("select * from #__vm_marrnufacturer_category");
+//$res = $db->loadRow();
+
+//echo ('fd');
+
+
 //$session->set('fl_commerceml', $array);
 //$session->get('fl_commerceml');
 //  категории товара
