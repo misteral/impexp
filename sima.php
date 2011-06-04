@@ -21,12 +21,12 @@ define ( 'MULTY', true);												//флаг если качаем через 
 define ( 'IMAGE_BASE', dirname ( __FILE__ ) . DS.'images' );
 define ( 'VM_IMAGE',dirname(dirname ( __FILE__ )).DS.'components'.DS.'com_virtuemart'.DS.'shop_image'.DS.'product');
 
-include ('include/sund.class.php');
-include	('include/simple_html_dom.php');
-include ('include/connectVM.php');
-
+require_once ('include/sund.class.php');
+require_once	('include/simple_html_dom.php');
+require_once ('include/connectVM.php');
 
 $db_my  = new ex_Mysql();
+
 
 $pars = new parse();
 $o = new output('sima');
@@ -34,6 +34,10 @@ $o->echo = false;
 
 //Проверим промзводителя и если нет создадим
 $manufacturer = 'sima-land';
+$manufacturer_ID = 1;
+#ID продавца, имя продавца, мое ID
+$vendor_ID = 1;
+
 
 $wget = FALSE;
 
@@ -53,10 +57,10 @@ if (file_exists(WGET_FILE)){unlink(WGET_FILE);}
 
 //качаем картинки
 //$wget = true;
-include('include/sima-img-kach.php');
+//include('include/sima-img-kach.php');
 
 //добавляем логотип переносим в нужный каталог
-include('include/sima-logo.php');
+//include('include/sima-logo.php');
 
 
 //выгружаем все в virtuemart

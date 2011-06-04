@@ -29,7 +29,7 @@ if ($value->product_status==2){//не обрабатываем если не с�
 			continue;
 		} //файл существует
 		//проверим может уже в vm лежит такой 
-		$file_500 = VM_IMAGE.DS.VENDOR.'_500_'.$row['product_sku'].'.jpg';
+		$file_500 = VM_IMAGE.DS.VENDOR.'_'.$row['product_sku'].'_500x500.jpg';
 		if (file_exists($file_500) and filesize($file_500)) {
 			$o->add('Файл существует в VM '.$row['product_sku']);
 			$db_my->update_status(4, $row['product_id']);

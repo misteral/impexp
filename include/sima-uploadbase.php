@@ -8,7 +8,7 @@
 
 //ClearBase(1);
 
-$manufacturer_ID = vendor_create($manufacturer); //создаем или берем cуществующий ид производителя
+vendor_create($manufacturer); //создаем или берем cуществующий ид производителя
 
 vm_unpublish_product_mnf(); // снимаем с публикации все данного mnf
 vm_delete_category(); //Удаляет все пустые категории

@@ -38,10 +38,12 @@ class ex_Mysql {
 	}
     private function connect() {
 		$user = 'root';
-    	$host = 'localhost';
+    	$host = '127.0.0.1';
 		$basename = 'sundmart';
 		$pass = '';
-		$this->db = @mysql_connect($host,$user,$pass);
+
+		$this->db = mysql_connect($host,$user,$pass);
+
 		if (!$this->db) 
 		{
 		echo " ( Not connected  MY SQL  ) ";
