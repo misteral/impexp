@@ -6,7 +6,7 @@
 //сменим image full path al
 //$db->setQuery ( "SELECT category_id FROM #__vm_category where category_name = '" . $name . "'" );
 
-//ClearBase(1);
+ClearBase(1);
 
 vendor_create($manufacturer); //создаем или берем cуществующий ид производителя
 
@@ -59,7 +59,7 @@ while ($row =  mysql_fetch_array($rows)){
 		$product_id =  vm_get_id($row['product_name'],$row['product_sku']); // есть ли такой товар по имени и артикулу
 		
 		$product_full_image =$manufacturer_ID.'_'.'500_'.$row['product_sku'].'.jpg';
-		$product_thumb_image =mysql_escape_string('resized/'.$manufacturer_ID.'_'.'90_'.$row['product_sku'].'.jpg');
+		$product_thumb_image =mysql_escape_string('resized/'.$manufacturer_ID.'_500_'.$row['product_sku'].'_90x90.jpg');
 		
 		if ($product_id){//есть такой товар
 			vm_set_publish($product_id); //установим флаг publish
@@ -70,7 +70,7 @@ while ($row =  mysql_fetch_array($rows)){
 		}//есть такой товар
 		else {//нет такого товара 
 
-			$product_id=newProducts(0,$row['product_sku'], $row['product_name'], $row['product_desc'], $product_full_image, $product_thumb_image, $row['product_ed']);
+			$product_id=newProducts(0,$row['product_sku'], $row['product_name'], $row['product_desc'], $product_full_image, $product_thumb_image, $row['product_ed'],$row['product_min']);
 			$product_price = round ($row['product_price']*$row['product_margin']);
 			vm_newProduct_price($product_id,$product_price); //установим цену
 			

@@ -441,7 +441,7 @@ function newGroups_xref( $parent_id, $category_id ) {
  *Создание нового товара
  *  $product_parent_id,$product_SKU, $product_name, $product_desc, $product_full_image, $product_thumb_image, $product_ed
  */
-function newProducts($product_parent_id,$product_SKU, $product_name, $product_desc, $product_full_image, $product_thumb_image, $product_ed) {
+function newProducts($product_parent_id,$product_SKU, $product_name, $product_desc, $product_full_image, $product_thumb_image, $product_ed, $product_min) {
 	global $db;
 
 	//global $vendor_1C_ID;
@@ -459,7 +459,7 @@ function newProducts($product_parent_id,$product_SKU, $product_name, $product_de
 	$ins->product_in_stock		 = 9999;
 	$ins->cdate = time ();
 	$ins->mdate = time ();
-
+	$ins->product_order_levels = $product_min;
 	$ins->product_full_image = $product_full_image;
 	$ins->product_thumb_image = $product_thumb_image;
 

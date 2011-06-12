@@ -22,7 +22,7 @@ define ( 'IMAGE_BASE', dirname ( __FILE__ ) . DS.'images' );
 define ( 'VM_IMAGE',dirname(dirname ( __FILE__ )).DS.'components'.DS.'com_virtuemart'.DS.'shop_image'.DS.'product');
 
 require_once ('include/sund.class.php');
-require_once	('include/simple_html_dom.php');
+require_once ('include/simple_html_dom.php');
 require_once ('include/connectVM.php');
 
 $db_my  = new ex_Mysql();

@@ -76,7 +76,7 @@ if ($value->product_status==1){//не обрабатываем если не с�
 				}
 				unset($desk1);
 				$item->product_ed = trim($item->product_ed);
-				$item->product_min =trim($item->product_min);
+				$item->product_min = preg_replace("/\D/","",trim($item->product_min));
 				$item->product_ost = trim($item->product_ost);
 				$item->product_isgroup = 0;
 				$item->product_parent_id = $id;
