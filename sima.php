@@ -64,8 +64,9 @@ if (file_exists(WGET_FILE)){unlink(WGET_FILE);}
 
 
 //выгружаем все в virtuemart
-include('include/sima-uploadbase.php');
+//include('include/sima-uploadbase.php');
 
+require_once ('include/sima-logofind.php');
 
 
 ?>
