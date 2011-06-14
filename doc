@@ -15,3 +15,13 @@
 
 Вендоры 
 1. Сима ланд
+
+Таблицы для переноса.
+
+vm_category
+vm_category_xref
+vm_product
+vm_product_category_xref
+vm_product_mf_xref
+vm_product_price
+vm_product_product_type_xref
