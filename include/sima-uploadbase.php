@@ -6,12 +6,13 @@
 //сменим image full path al
 //$db->setQuery ( "SELECT category_id FROM #__vm_category where category_name = '" . $name . "'" );
 
-ClearBase(1);
+//ClearBase(1);
 
 vendor_create($manufacturer); //создаем или берем cуществующий ид производителя
 
 vm_unpublish_product_mnf(); // снимаем с публикации все данного mnf
-vm_delete_category(); //Удаляет все пустые категории
+vm_unpublish_categories(); //снимает с публикации категории без видимого товара
+
 
 //vm_product_notpublish_if_not_updated(); //опасная функция !!! not publish если товара нет такого в обновке с симы
 
@@ -24,8 +25,6 @@ while ($row =  mysql_fetch_array($rows)){
 			$pcat_id=newCategory($row['product_name']);
 			newGroups_xref(0,$pcat_id);}//создадим новую
 		else {vm_set_publish_category($pcat_id);}
-		
-		
 		$db_my->update_status('5', $pcat_id);
 	}
 }
@@ -49,7 +48,6 @@ while ($row =  mysql_fetch_array($rows)){
 		$db_my->update_status('5', $pcat_id);
 	}
 }
-
 
 //******************* обработка товаров***************************
 $rows = $db_my->get_from_status('4');  // берем со статусом 4
@@ -92,9 +90,6 @@ while ($row =  mysql_fetch_array($rows)){
 		}//это группа
 }
 
-
-
-vm_delete_category(); //Удаляет все пустые категории еще раз
 // добавим картинку к группам из товара 
 
 vm_set_group_img(); //установим картинки на группы

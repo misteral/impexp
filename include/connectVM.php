@@ -1,4 +1,4 @@
-﻿<?
+﻿<?php
 //define ( 'DS', DIRECTORY_SEPARATOR );
 # директория в которой расположен движок /joomla/ ,если в корне сайта то пусто
 //define ( 'JPATH_BASE', dirname(dirname(dirname ( __FILE__ ))) . '' );
@@ -167,33 +167,7 @@ function LoadmanufacturerName() {
 	return $manufacturer;
 }
 
-# Загрузим производителей товара в массив
-function LoadShopperName($vendor_id) {
-	/*	global $db;
-	$Shopper = array ();
-	$sql = "SELECT shopper_group_id as id, mf_name as name FROM #__vm_shopper_group";
-	$db->setQuery ( $sql );
-	$rows = $db->loadObjectList ();
-	foreach ( $rows as $row ) {
-	$manufacturer ["$row->name"] = ( int ) $row->id;
-	}
-	return $manufacturer;
-	*/
-}
 
-# Загрузим продавцов товара в массив
-function LoadVendorName($vendor_id) {
-	/*	global $db;
-	$vendor = array ();
-	$sql = "vendor_id as id, vendor_name as name FROM #__vm_vendor";
-	$db->setQuery ( $sql );
-	$rows = $db->loadObjectList ();
-	foreach ( $rows as $row ) {
-	$vendor["$row->name"] = ( int ) $row->id;
-	}
-	return $vendor;
-	*/
-}
 
 
 # Очистка таблиц в базе
@@ -271,32 +245,6 @@ function ClearBase($change) {
 	}
 }
 
-# Пишем свойста характеристик на товар
-function Write_product_attribute_sku()
-{
-	/*global $char_type_name;
-
-	global $db;
-	global $log;
-	$log->addEntry ( array ('comment' => 'Write_product_attribute_sku product price add char '.$product_id.':'.$char_type));
-	foreach ($char_type_name as $product_id => $char_type) {
-	$i = 1;
-
-	foreach ($char_type as $index => $char_type_attr)
-	{
-	$ins = new stdClass ();
-	$ins->product_id 		= $char_type->product_id;
-	$ins->attribute_name 	= $attr->attribute_name;
-	$ins->attribute_list 	= $i;
-	$i++;
-	if (! $db->insertObject ( '#__vm_product_attribute_sku', $ins)) {
-	return false;
-	}
-	}
-	}*/
-}
-
-
 
  
 /**
@@ -323,26 +271,7 @@ function vendor_create($vendor)
 		return $mf_category_id	= manufacturer_category_create($vendor_name, $vendor_store_name);	
 	}
 
-/*	################################################################################
-	$db->setQuery ( "SELECT vendor_id FROM #__vm_vendor where vendor_name = '" . $vendor_name . "'" );
-	$rows_sub_Count = $db->loadResult ();
 
-	// Если группа покупателей по имени есть в базе то мы ее не меняем , а берем ее id
-	if (isset ( $rows_sub_Count )) {
-		return (int)$rows_sub_Count;
-	} else // Если группа покупателей по имени не найдена базе то мы ее создаем
-	{
-		$ins = new stdClass ();
-		$ins->vendor_id 		= NULL;
-		$ins->vendor_name 		= $vendor_name;
-		$ins->vendor_store_name = $vendor_store_name;
-		#$ins->vendor_currency = 'RUB';
-		$ins->vendor_country	= "RU";
-		if (! $db->insertObject ( '#__vm_vendor', $ins, 'vendor_id' )) {
-			return false;
-		}
-		return $ins->vendor_id;
-	}*/
 }
 
 /**
@@ -379,8 +308,6 @@ function newCategory($category_name, $category_description = '') {
 	return $ins->category_id;
 }
 
-
-
 # Создание новой ссылки товара на группу
 function newProducts_xref($category_id, $product_id) {
 
@@ -394,9 +321,7 @@ function newProducts_xref($category_id, $product_id) {
 	if (! $db->insertObject ( '#__vm_product_category_xref', $ins )) {
 		return false;
 	}
-
 }
-
 
 
 /**
@@ -477,10 +402,6 @@ function newProducts($product_parent_id,$product_SKU, $product_name, $product_de
 
 	return $ins->product_id;
 }
-# Парсинг типов цен
-
-# Парсинг типов цен на характеристики
-
 
 # Создание новой группы для производителя
 function manufacturer_category_create($name,$desc='') {
@@ -496,7 +417,6 @@ function manufacturer_category_create($name,$desc='') {
 	}
 	return $ins->mf_category_id;
 }
-
 
 /**
  * Обновляет категорию производителей
@@ -519,7 +439,6 @@ function manufacturer_category_update($id, $name,$desc='') {
 	return $ins->mf_category_id;
 }
 
-
 # Создание нового производителя с привязкой к группе продавца
 function manufacturer_create($name) {
 
@@ -538,10 +457,6 @@ function manufacturer_create($name) {
 	}
 	return $ins->manufacturer_id;
 }
-# Обработка характеристик товара возвращает строковый индекс характеристик
-#
-
-
 
 /**
  *Берет ид из vm_product по наименованиею и артикулу
@@ -575,8 +490,6 @@ function vm_update_image($product_id, $product_full_image, $product_thumb_image,
 	$item->product_s_desc = $desc;
 	$db->updateObject( '#__vm_product', $item, 'product_id' );
 }
-
-
 
 /**
  *Берет ид из vm_category по наименованиею и парент ID
@@ -623,13 +536,62 @@ function vm_get_category_id_name($category_name,$parent_name) {
 }
 
 
+/**
+ * Снимает!!! с публикации пустые категории у которых нет опукликованных либо товаров либо подчиненных категорий не удаляет зависимостей 
+ */
+function vm_unpublish_categories() {
+	global $db;	
+	$q ="select * from #__vm_category where category_publish = 'Y'";
+	$db->setQuery ($q);
+	$rows = $db-> loadAssocList();
+	$size = sizeof($rows);
+	for ($i=0; $i<$size; $i++){
+	$category_id = $rows[$i]["category_id"];
+	$kol_category = vm_get_category_child_category($category_id);
+	$kol_product = vm_get_category_child_product($category_id);
+	if ($kol_category == 0 or $kol_product == 0) {
+		vm_set_unpublish_category($category_id);
+	}
+	}
+}
 
+/**
+ * Считает сколько в категории подчиненных категорий с публикацией
+ * @param $category_id
+ */
+function vm_get_category_child_category ($category_id){
+	global $db;	
+	$q ="select count(a.category_child_id) from #__vm_category_xref a, #__vm_category b where a.category_parent_id  = ".$category_id
+	." and a.category_parent_id = b.category_id and b.category_publish = 'Y'";
+	$db->setQuery ($q);
+	$rows_sub_Count = $db->loadResult();
+	if (isset ( $rows_sub_Count )) {
+	return $rows_sub_Count;
+	}
+	return 0;
+}
+
+/**
+ * Считает сколько в категории подчиненных товаров с публикацией
+ * @param  $category_id
+ *
+ */
+function vm_get_category_child_product($category_id) {
+		global $db;	
+	$q ="select count(a.category_id) from #__vm_product_category_xref a, #__vm_product b where a.category_id  = ".$category_id
+		."and a.product_id = b.product_id and b.product_publish = 'Y'";
+	$db->setQuery ($q);
+	$rows_sub_Count = $db->loadResult ();
+	if (isset ( $rows_sub_Count )) {
+	return $rows_sub_Count;
+	}
+	return 0;
+}
 
 
 /**
  * Удаляет категории если у нее нет деток и убирает с нее все зависимости
- * @todo сделать функцию 
- */
+  */
 function vm_delete_category() {
 	global $db;
 	global $manufacturer_ID;
@@ -662,6 +624,7 @@ function vm_delete_category() {
 	$db->query();
 
 }
+
 /**
  * снимает с публикации всю продукция в контексте данного mnf и отвязывает от групп
  */
@@ -679,8 +642,6 @@ function vm_unpublish_product_mnf() {
     $db->setQuery ($sql);
 	$db->query();
 }
-
-
 
 /**
  * Устанавливает publish на продукт $product_id
@@ -703,12 +664,21 @@ function vm_set_publish_category($category_id) {
 	$db->query ();
 }
 
+/**
+ * Снимает с публикации категорию
+ */
+function vm_set_unpublish_category($category_id) {
+	global $db;
+	$q = "update #__vm_category set category_publish = 'N' where category_id = ".$category_id;
+	$db->setQuery ($q);
+	$db->query ();
+}
 
 /**
- * Снимаем с публикации убираем с категорий
+ * Снимаем с публикации, убираем с категорий
  * @param  $product_id
  */
-function vm_set_unpublish ($product_id){
+function vm_set_unpublish ($product_id) {
 	global $db;
 	$q = "update #__vm_product set product_publish = 'N' where product_id = ".$product_id;
 	$db->setQuery ($q);
@@ -797,7 +767,6 @@ function vm_set_group_img() {
 	  
 }
 
-
 # Создание дерева групп
 /**
  * Устанавливает цену на продукт
@@ -865,13 +834,6 @@ function newShopperGroupCreate($name) {
 	}
 	return $ins->shopper_group_id;
 }
-
-
-/**
- *заполнение цены товара
- */
-
-
 
 # выгрузка заказов из VirtueMart
 function createzakaz() {
@@ -1027,10 +989,5 @@ function CheckAuthUser()
 	}
 	return 'false user name or password';
 }
-
-
-
-
-
 
 ?>
