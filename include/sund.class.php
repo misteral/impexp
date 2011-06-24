@@ -732,6 +732,8 @@ function multiget($urls)
 			$conn[$i]=curl_init(trim($url));
 			curl_setopt($conn[$i], CURLOPT_MAXREDIRS, 10 );
 			curl_setopt($conn[$i], CURLOPT_FOLLOWLOCATION, true );
+			curl_setopt($conn[$i], CURLOPT_FAILONERROR, true );
+			curl_setopt($conn[$i], CURLOPT_REFERER, 'yandex organic');
 			curl_setopt($conn[$i], CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($conn[$i], CURLOPT_TIMEOUT, $this->timeout);
 			curl_setopt($conn[$i], CURLOPT_USERAGENT, $useragent);
@@ -786,12 +788,15 @@ function multiget_to_utf($urls)
 			$conn[$i]=curl_init(trim($url));
 			curl_setopt($conn[$i], CURLOPT_MAXREDIRS, 10 );
 			curl_setopt($conn[$i], CURLOPT_FOLLOWLOCATION, true );
+			curl_setopt($conn[$i], CURLOPT_FAILONERROR, true );
+			curl_setopt($conn[$i], CURLOPT_REFERER, 'yandex organic');			
 			curl_setopt($conn[$i], CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($conn[$i], CURLOPT_TIMEOUT, $this->timeout);
 			curl_setopt($conn[$i], CURLOPT_USERAGENT, $useragent);
 			curl_multi_add_handle ($mh,$conn[$i]);
 		}
 		do { $n=curl_multi_exec($mh,$active); usleep(100); } while ($active);
+		
 		foreach ($pack as $i => $url)
 		{
       		
