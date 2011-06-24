@@ -50,24 +50,24 @@ if (file_exists(WGET_FILE)){unlink(WGET_FILE);}
 
 
 //качаем и обрабатываем каталог
-//include('include/sima-kach.php');
+include('include/sima-kach.php');
 
 //обрабатываем категрии с товаром
-//include('include/sima-parser-cat.php');
+include('include/sima-parser-cat.php');
 
 //качаем картинки
 //$wget = true;
-//include('include/sima-img-kach.php');
+include('include/sima-img-kach.php');
 
 //добавляем логотип переносим в нужный каталог
-//include('include/sima-logo.php');
+include('include/sima-logo.php');
 
 
 //выгружаем все в virtuemart
 include('include/sima-uploadbase.php');
 
 //проверяем картинки в VM и еще раз выкачиваем
-//require_once ('include/sima-logofind.php');
+ require_once ('include/sima-logofind.php');
 
 
 ?>
