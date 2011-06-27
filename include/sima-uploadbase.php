@@ -6,12 +6,12 @@
 //сменим image full path al
 //$db->setQuery ( "SELECT category_id FROM #__vm_category where category_name = '" . $name . "'" );
 
-//ClearBase(1);
+ClearBase(1);
 
 vendor_create($manufacturer); //создаем или берем cуществующий ид производителя
 
 vm_unpublish_product_mnf(); // снимаем с публикации все данного mnf
-vm_unpublish_categories(); //снимает с публикации категории без видимого товара
+//vm_unpublish_categories(); //снимает с публикации категории без видимого товара
 
 
 //vm_product_notpublish_if_not_updated(); //опасная функция !!! not publish если товара нет такого в обновке с симы
@@ -94,7 +94,7 @@ while ($row =  mysql_fetch_array($rows)){
 
 vm_set_group_img(); //установим картинки на группы
 vm_set_group_img(); //установим картинки на группы надо два раза иначе пропускает головняки 
-
+vm_unpublish_categories(); //снимает с публикации категории без видимого товара
 
 
 
