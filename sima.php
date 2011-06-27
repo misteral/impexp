@@ -17,7 +17,7 @@ define ( '_TRY', 3); 													//количество попыток зака
 define ( 'DIF_DATE', '3'); 												//количество дней на устаревание
 define ( 'WGET_BASE', 'c:' . DS.'wget'.DS.'bin' );						//бинарник wget 
 define ( 'WGET_FILE', 'wget.sima-images' );								//файл источник для wget
-define ( 'MULTY', true);												//флаг если качаем через мульти
+define ( 'MULTY', false);												//флаг если качаем через мульти
 define ( 'IMAGE_BASE', dirname ( __FILE__ ) . DS.'images' );
 define ( 'VM_IMAGE',dirname(dirname ( __FILE__ )).DS.'components'.DS.'com_virtuemart'.DS.'shop_image'.DS.'product');
 
@@ -50,21 +50,21 @@ if (file_exists(WGET_FILE)){unlink(WGET_FILE);}
 
 
 //качаем и обрабатываем каталог
-include('include/sima-kach.php');
+//include('include/sima-kach.php');
 
 //обрабатываем категрии с товаром
-include('include/sima-parser-cat.php');
+//include('include/sima-parser-cat.php');
 
 //качаем картинки
 //$wget = true;
-include('include/sima-img-kach.php');
+//include('include/sima-img-kach.php');
 
 //добавляем логотип переносим в нужный каталог
-include('include/sima-logo.php');
+//include('include/sima-logo.php');
 
 
 //выгружаем все в virtuemart
-include('include/sima-uploadbase.php');
+//include('include/sima-uploadbase.php');
 
 //проверяем картинки в VM и еще раз выкачиваем
  require_once ('include/sima-logofind.php');
