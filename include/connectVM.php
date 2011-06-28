@@ -541,18 +541,39 @@ function vm_get_category_id_name($category_name,$parent_name) {
  */
 function vm_unpublish_categories() {
 	global $db;	
-	$q ="select * from #__vm_category where category_publish = 'Y'";
+	
+	//снимем с публикации те категории где нет опубликованного товара
+	$q ="select category_id from #__vm_category a, #__vm_category_xref b where a.category_publish = 'Y' and
+	a.category_id = b.category_child_id and b.category_parent_id <> 0";
+	$db->setQuery ($q);
+	$rows = $db-> loadAssocList();
+	$size = sizeof($rows);
+	for ($i=0; $i<$size; $i++){
+	$category_id = $rows[$i]["category_id"];
+	//$kol_category = vm_get_category_child_category($category_id);
+	$kol_product = vm_get_category_child_product($category_id);
+	if ($kol_product == 0) {
+		vm_set_unpublish_category($category_id);
+	}
+	}
+	//снимем с публикации те гоовные категории в которых нет опубликованных категорий
+	$q ="select category_id from #__vm_category a, #__vm_category_xref b where a.category_publish = 'Y' and
+	a.category_id = b.category_child_id and b.category_parent_id = 0";
 	$db->setQuery ($q);
 	$rows = $db-> loadAssocList();
 	$size = sizeof($rows);
 	for ($i=0; $i<$size; $i++){
 	$category_id = $rows[$i]["category_id"];
 	$kol_category = vm_get_category_child_category($category_id);
-	$kol_product = vm_get_category_child_product($category_id);
-	if ($kol_category == 0 or $kol_product == 0) {
+	//$kol_product = vm_get_category_child_product($category_id);
+	if ($kol_category == 0) {
 		vm_set_unpublish_category($category_id);
 	}
 	}
+	
+	
+	
+	
 }
 
 /**
@@ -579,7 +600,7 @@ function vm_get_category_child_category ($category_id){
 function vm_get_category_child_product($category_id) {
 		global $db;	
 	$q ="select count(a.category_id) from #__vm_product_category_xref a, #__vm_product b where a.category_id  = ".$category_id
-		."and a.product_id = b.product_id and b.product_publish = 'Y'";
+		." and a.product_id = b.product_id and b.product_publish = 'Y'";
 	$db->setQuery ($q);
 	$rows_sub_Count = $db->loadResult ();
 	if (isset ( $rows_sub_Count )) {
