@@ -673,12 +673,12 @@ public  $product_ost;
  *return не скачанные urls$
  */
 class parse {
-	public $sleep=5;
+	public $sleep;
 	public $proxy;
 	public $try = 3;
 	public $count = 0;
 
-	public $timeout = 20; // максимальное время загрузки страницы в секундах
+	public $timeout = 100; // максимальное время загрузки страницы в секундах
 	public $threads = 10; // количество потоков 
 
 	private  $all_useragents = array(
@@ -740,10 +740,14 @@ function multiget($urls)
 			curl_multi_add_handle ($mh,$conn[$i]);
 		}
 		do { $n=curl_multi_exec($mh,$active); usleep(100); } while ($active);
+		
 		foreach ($pack as $i => $url)
 		{
       		
 			$url = explode(';', $url);
+			$result = curl_multi_info_read($mh);
+			$info = curl_getinfo($conn[$i]);
+			//if( ! is_array($result)) break;
 			$res = curl_multi_getcontent($conn[$i]);
       		if ($res){
       		$target_file = $url[1];
@@ -792,6 +796,7 @@ function multiget_to_utf($urls)
 			curl_setopt($conn[$i], CURLOPT_REFERER, 'yandex organic');			
 			curl_setopt($conn[$i], CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($conn[$i], CURLOPT_TIMEOUT, $this->timeout);
+			if($this->proxy) {curl_setopt($conn[$i], CURLOPT_PROXY, trim($this->proxy));} 			
 			curl_setopt($conn[$i], CURLOPT_USERAGENT, $useragent);
 			curl_multi_add_handle ($mh,$conn[$i]);
 		}
@@ -801,16 +806,26 @@ function multiget_to_utf($urls)
 		{
       		
 			$url = explode(';', $url);
+			
+			
+			$info = curl_getinfo($conn[$i],CURLINFO_HTTP_CODE);
+			$target_file = $url[1];
+			$err = curl_errno($conn[$i]);
+			$errhm = curl_error($conn[$i]);
+			$lenErr = strlen($errhm);
 			$res = curl_multi_getcontent($conn[$i]);
-      		if ($res){
-      		$target_file = $url[1];
+      		if ($res and $lenErr ==0 and $err==0){
+      		
       		$res = mb_convert_encoding($res,'UTF8', "CP1251");
       		$res = $this->save($target_file, $res);
       		}
       		else{
+      			if (file_exists($target_file)){unlink($target_file);}
       			$urls[] = $url[0].';'.$url[1]; //запишем не скачанные
       		}
       		curl_close($conn[$i]);
+      		unset($res);
+      		
       		
 		}
 curl_multi_close($mh);

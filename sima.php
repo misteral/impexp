@@ -17,7 +17,7 @@ define ( '_TRY', 3); 													//количество попыток зака
 define ( 'DIF_DATE', '3'); 												//количество дней на устаревание
 define ( 'WGET_BASE', 'c:' . DS.'wget'.DS.'bin' );						//бинарник wget 
 define ( 'WGET_FILE', 'wget.sima-images' );								//файл источник для wget
-define ( 'MULTY', false);												//флаг если качаем через мульти
+define ( 'MULTY', true);												//флаг если качаем через мульти
 define ( 'IMAGE_BASE', dirname ( __FILE__ ) . DS.'images' );
 define ( 'VM_IMAGE',dirname(dirname ( __FILE__ )).DS.'components'.DS.'com_virtuemart'.DS.'shop_image'.DS.'product');
 
@@ -44,23 +44,23 @@ $wget = FALSE;
 if (file_exists(WGET_FILE)){unlink(WGET_FILE);}
 
 //$pars->proxy = '67.205.68.11:8080';
-//$pars->proxy = '10.44.33.88:8118';
+$pars->proxy = '10.44.33.88:8118';
 //$pars->sleep = '5';
 //$pars->try = 3;
-
-
+$urls = array("www.e-snduchok.ru;c:\sunduc.html","www.e-sunduchok.ru;c:\sunduc2.html");
+$urls = $pars->multiget_to_utf($urls);
 //качаем и обрабатываем каталог
-//include('include/sima-kach.php');
+include('include/sima-kach.php');
 
 //обрабатываем категрии с товаром
-//include('include/sima-parser-cat.php');
+include('include/sima-parser-cat.php');
 
 //качаем картинки
 //$wget = true;
-//include('include/sima-img-kach.php');
+include('include/sima-img-kach.php');
 
 //добавляем логотип переносим в нужный каталог
-//include('include/sima-logo.php');
+include('include/sima-logo.php');
 
 
 //выгружаем все в virtuemart
