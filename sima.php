@@ -9,7 +9,7 @@ define ( '_JEXEC', 1 ); 												//флаг исполнения для кл�
 define ( 'DS', DIRECTORY_SEPARATOR );					
 define ( 'CPATH_BASE', dirname ( __FILE__ ) . DS.'dw-sima' );         	//куда файлы складываем
 define ( 'JPATH_BASE', dirname(dirname ( __FILE__ )) . '' ); 			//корень джумлы
-//define ( 'IMAGE_BASE', JPATH_BASE.DS.'tmp');						//где картинки живут(оригиналы)
+//define ( 'IMAGE_BASE', JPATH_BASE.DS.'tmp');					    	//где картинки живут(оригиналы)
 define ( 'TARGET', 'http://sima-land.ru' );								//url сайта 
 define ( 'CATALOG','/catalog.html'); 									//url каталога
 define ( 'VENDOR','1' ); 												//вендор сима
@@ -44,11 +44,11 @@ $wget = FALSE;
 if (file_exists(WGET_FILE)){unlink(WGET_FILE);}
 
 //$pars->proxy = '67.205.68.11:8080';
-$pars->proxy = '10.44.33.88:8118';
+//$pars->proxy = '10.44.33.88:8118';
 //$pars->sleep = '5';
 //$pars->try = 3;
-$urls = array("www.e-snduchok.ru;c:\sunduc.html","www.e-sunduchok.ru;c:\sunduc2.html");
-$urls = $pars->multiget_to_utf($urls);
+//$urls = array("www.e-snduchok.ru;c:\sunduc.html","www.e-sunduchok.ru;c:\sunduc2.html");
+//$urls = $pars->multiget_to_utf($urls);
 //качаем и обрабатываем каталог
 include('include/sima-kach.php');
 

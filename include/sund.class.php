@@ -745,12 +745,13 @@ function multiget($urls)
 		{
       		
 			$url = explode(';', $url);
-			$result = curl_multi_info_read($mh);
-			$info = curl_getinfo($conn[$i]);
-			//if( ! is_array($result)) break;
+			$info = curl_getinfo($conn[$i],CURLINFO_HTTP_CODE);
+			$target_file = $url[1];
+			$err = curl_errno($conn[$i]);
+			$errhm = curl_error($conn[$i]);
+			$lenErr = strlen($errhm);
 			$res = curl_multi_getcontent($conn[$i]);
-      		if ($res){
-      		$target_file = $url[1];
+      		if ($res and $lenErr ==0 and $err==0){
       		//$res = mb_convert_encoding($res,'UTF8', "CP1251");
       		$res = $this->save($target_file, $res);
       		}

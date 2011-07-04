@@ -6,7 +6,7 @@
 //сменим image full path al
 //$db->setQuery ( "SELECT category_id FROM #__vm_category where category_name = '" . $name . "'" );
 
-ClearBase(1);
+//ClearBase(1);
 
 vendor_create($manufacturer); //создаем или берем cуществующий ид производителя
 
