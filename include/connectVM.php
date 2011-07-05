@@ -30,7 +30,7 @@ require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'factory.php' );
 /* Create the Application */
 $mainframe =& JFactory::getApplication('site');
 $db = JFactory::getDBO ();
-
+if (DEBUG_VM){$db->debug(1);}
 //jimport ( 'joomla.error.log' );
 //jimport ( 'joomla.user.helper' );
 $log = '';//&JLog::getInstance ( 'connectVM.log' );
@@ -786,6 +786,22 @@ function vm_set_group_img() {
 		
 
 	  
+}
+
+function vm_save_debug() {
+	global $db;
+	$file = dirname(dirname ( __FILE__ )). DS.'log'.DS."query_db_vm.sql";
+	if (file_exists($file)){unlink($file);}
+	$rows = $db->getlog();
+	if ($rows){
+		$size = sizeof($rows);
+			for ($i=0; $i<$size; $i++){
+				if (substr_count(strtolower($rows[$i]),"select") < 1){
+					$line = $rows[$i]."\r\n";
+					file_put_contents($file, $line, FILE_APPEND );
+				}
+			}
+	}
 }
 
 # Создание дерева групп

@@ -14,10 +14,14 @@ $logo = 'include/img - logo.png';
 //$o = new output('add_logo');
 if (!file_exists($file_500) or !file_exists($file_90)) {
 	ex_Mysql::add_logo($file,$logo,100,false);
-	if (!file_exists($file_500)){ex_Mysql::img_resize($logo_file,$file_500,500,500,$color = 0xFFFFFF,80);}
+	if (!file_exists($file_500)){
+		ex_Mysql::img_resize($logo_file,$file_500,500,500,$color = 0xFFFFFF,80);
+		copy($file_500,IMAGES_FOR_UPLOAD.DS.VENDOR.'_500_'.$fileinfo['filename'].'.'.$fileinfo['extension']);
+	}
 	if (!file_exists($file_90)){ex_Mysql::img_resize($logo_file,$file_90,90,90,$color = 0xFFFFFF,80);}
 	unlink($logo_file);
 	++$c;
+	
 }
 unlink($file);
 //exit;
