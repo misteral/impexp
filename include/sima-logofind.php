@@ -4,7 +4,7 @@ $o->add('Ищем не скачанные картинки и косяки с т
 $o->add('-------------------------------------------------------------');
 $o->add('Обработаем продукты');
 
-$sql = "SELECT a.product_full_image FROM #__vm_product a, #__vm_product_mf_xref b
+$sql = "SELECT DISTINCT a.product_full_image FROM #__vm_product a, #__vm_product_mf_xref b
 where a.product_publish = 'Y' and a.product_id = b.product_id and b.manufacturer_id = 1";
 $db->setQuery ( $sql );
 $rows = $db-> loadAssocList();
