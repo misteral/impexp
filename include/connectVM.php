@@ -465,7 +465,7 @@ function manufacturer_create($name) {
  */
 function vm_get_id($product_name,$product_sku) {
 	global $db;	
-	$q = "SELECT product_id FROM #__vm_product where product_name = '" . $product_name . "' and product_sku = '". $product_sku."'";
+	$q = "SELECT product_id FROM #__vm_product where product_name = '" . mysql_escape_string($product_name) . "' and product_sku = '". $product_sku."'";
 	$db->setQuery ($q);
 	$rows_sub_Count = $db->loadResult ();
 	if (isset ( $rows_sub_Count )) {
